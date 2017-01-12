@@ -1,0 +1,16 @@
+﻿@model IEnumerable<MockCentennial.Models.TermOption>
+
+@{
+    ViewBag.Title = "Re-Admit";
+}
+
+@using (Html.BeginForm("ReAdmit", "Registration", FormMethod.Post))
+{
+    <div>
+        I want to register for term @Html.DropDownList("TermId",new SelectList(Model, "TermId", "TermName"))
+    </div>
+    <div><button type="submit">Confirm Registration</button></div>
+}
+
+
+

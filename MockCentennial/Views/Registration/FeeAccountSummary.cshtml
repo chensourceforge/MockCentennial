@@ -1,0 +1,181 @@
+﻿@model MockCentennial.Models.Invoice
+@{
+    ViewBag.Title = "Current Semester Account Summary";
+    double tuitionFee = 0, registrationFee = 0, total = 0;
+    if (Model != null)
+    {
+        tuitionFee = Model.tuition.Sum(c => c.fee);
+        registrationFee = Model.registrationFee;
+        total = Model.total;
+    }
+}
+
+<style type="text/css">
+    TABLE TD.ntlabel_left {
+        background-color: #E3E5EE;
+        color: #1E2B83;
+        font-family: Arial Narrow, verdana, helvetica, sans-serif;
+        font-weight: normal;
+        font-size: 100%;
+        font-style: normal;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    TABLE TD.ntlabel_right {
+        background-color: #E3E5EE;
+        color: #1E2B83;
+        font-family: Arial Narrow, verdana, helvetica, sans-serif;
+        font-weight: normal;
+        font-size: 100%;
+        font-style: normal;
+        text-align: right;
+        vertical-align: top;
+    }
+</style>
+<div class="infotextdiv">
+    <table CLASS="infotexttable" SUMMARY="This layout table contains information that may be helpful in understanding the content and functionality of this page.  It could be a brief set of instructions, a description of error messages, or other special information.">
+        <tr>
+            <td CLASS="indefault"><img src="~/img/web_info_cascade.png" alt="Information" CLASS="headerImg" TITLE="Information" NAME="web_info" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=12 WIDTH=14 /></td>
+            <td CLASS="indefault">
+                <SPAN class="infotext">
+                    The details of your account balance for the term is summarized below.  The Opening Account Balance includes all transactions processed prior to this session.<br><B>If you have added additional courses over the normal full-time load, the <i>overload</i> charges will be included in the Fee Categories below.</B><br><br>
+                    <B><font color="red">If you originally paid using the Deposit Payment Plan and now wish to pay the balance please follow the steps below: </font></B><br>
+                    <ol>
+                        <li>Record the Account Total below and deduct it from your total fees</li>
+                        <li>Select the <b>Student Services</b> tab above </li>
+                        <li>Select <b>Pay Outstanding Balance</b></li>
+                        <li>Select <b>Pay Now</b> and follow the prompts</li>
+                    </ol>
+                        <br>
+                        <br>
+                        <big>If you wish to move forward to view your Fees Options and complete the Payment Process please hit <i>"NEXT"</i>.</big>
+                </SPAN>
+            </td>
+        </tr>
+    </table>
+</div>
+<table CLASS="datadisplaytable" border="0" cellspacing="5">
+    <tr><td></td>
+    <td>Opening Account Balance</td>
+    <td colspan="2"></td>
+    <td colspan="2"></td>
+    <td align="right" colspan="2" nowrap="nowrap">
+        $0.00
+    </td>
+    </tr>
+    <tr>
+        <th CLASS="ddheader" scope="col"> Category </th>
+        <th CLASS="ddheader" scope="col" width="55%"> Description </th>
+        <th CLASS="ddheader" scope="col" colspan="2"> Charge </th>
+        <th CLASS="ddheader" scope="col" colspan="2"> Payment </th>
+        <th CLASS="ddheader" scope="col" colspan="2"> Balance </th>
+    </tr>
+    <tr>
+        <td>TUI</td>
+        <td>Registration Tuition</td>
+        <td></td>
+        <td align="right" nowrap="nowrap">
+            @($"{tuitionFee:C}")
+        </td>
+        <td colspan="2"></td>
+        <td colspan="2" nowrap="nowrap"></td>
+    </tr>
+    <tr>
+        <td>FEE</td>
+        <td>Registration Fees</td>
+        <td></td>
+        <td align="right" nowrap="nowrap">
+            @($"{registrationFee:C}")
+        </td>
+        <td colspan="2"></td>
+        <td colspan="2" nowrap="nowrap"></td>
+    </tr>
+    <tr>
+        <td>CC</td>
+        <td>Credit Card Payments</td>
+        <td colspan="2"></td>
+        <td></td>
+        <td align="right" nowrap="nowrap">
+            @($"{total:C}")
+        </td>
+        <td colspan="2"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="2" bgcolor="black"></td>
+        <td colspan="2" bgcolor="black"></td>
+        <td colspan="2" bgcolor="black"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class="ntlabel_right">Current Semester Total</td>
+        <td></td>
+        <td align="right" nowrap="nowrap">
+            @($"{total:C}")
+        </td>
+        <td></td>
+        <td align="right" nowrap="nowrap">
+            @($"{total:C}")
+        </td>
+        <td></td>
+        <td align="right" nowrap="nowrap">
+            $0.00
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="2"></td>
+        <td colspan="2"></td>
+        <td colspan="2" bgcolor="black"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4" class="ntlabel_right">Account Total</td>
+        <td></td>
+        <td align="right" nowrap="nowrap">
+            $0.00
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="2"></td>
+        <td colspan="2"></td>
+        <td colspan="2" bgcolor="black"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="2"></td>
+        <td colspan="2"></td>
+        <td colspan="2" bgcolor="black"></td>
+    </tr>
+</table>
+<br />
+
+
+<center>
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="33%">
+                <form >
+                    <input type="submit" value=" Back " style="width:100%">
+                </form>
+            </td>
+            <td width="34%">
+                &nbsp
+            </td>
+            <td width="33%">
+                <form >
+                    <input type="hidden" name="p_acct_total" value="0">
+                    <input type="submit" value=" Next " style="width:100%">
+                </form>
+            </td>
+        </tr>
+    </table>
+</center>
+

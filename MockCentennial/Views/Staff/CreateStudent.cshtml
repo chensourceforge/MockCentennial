@@ -1,0 +1,49 @@
+﻿@model MockCentennial.Models.Student
+
+@{
+    ViewBag.Title = "Create Student";
+}
+
+@using (Html.BeginForm("CreateStudent", "Staff", FormMethod.Post))
+{
+
+    <table>
+        <tr>
+            <td>Student Number</td>
+            <td>@Html.TextBoxFor(model => model.StudentNum)</td>
+        </tr>
+        <tr>
+            <td>First Name</td>
+            <td>@Html.TextBoxFor(model => model.StudentFirstMidName)</td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td>@Html.TextBoxFor(model => model.StudentLastName)</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>@Html.TextBoxFor(model => model.StudentEmail)</td>
+        </tr>
+        <tr>
+            <td>Is in good academic standing</td>
+            <td>@Html.CheckBoxFor(model => model.StudentAcademicStanding)</td>
+        </tr>
+        <tr>
+            <td>Has holds</td>
+            <td>@Html.CheckBoxFor(model => model.StudentHasHolds)</td>
+        </tr>
+        <tr>
+            <td>Can register</td>
+            <td>@Html.CheckBoxFor(model => model.StudentCanRegister)</td>
+        </tr>
+        <tr>
+            <td>Start Date</td>
+            <td>@Html.EditorFor(model => model.StudentStartDate)</td>
+        </tr>
+
+    </table>
+
+    <div>
+        <input type="submit" value="Save Changes" />
+    </div>
+}

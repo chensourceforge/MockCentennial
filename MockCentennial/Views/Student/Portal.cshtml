@@ -1,0 +1,601 @@
+﻿@model MockCentennial.Models.Student
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head activetabindex="1" activetabid="u11l1s8" activetabpriortostylesheetprocessing="">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta content="IE=EmulateIE8" http-equiv="X-UA-Compatible">
+    <title>Centennial College myCentennial Portal</title>
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/portal.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/style.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/custom.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/style2.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/cpAlert.css")">
+
+</head>
+<body class="main">
+    <a name="TOP"></a><a class="skip" id="skip" href="#tab">Skip Navigation</a><table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <td>
+                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <td class="bg1">
+
+                            <DIV><div style="width: 100%; height: 80px; margin-bottom: 6px; background-image: url(/img/top_spacer.jpg); background-repeat: repeat-x; background-position: 0 0;">
+                                
+                                <div style="float: left; width: 252px; height: 80px; background-image: url(/img/top_left.jpg); background-repeat: no-repeat; background-position: 00;"></div>
+                                <div style="float: right; width: 248px; height: 80px; background-image: url(/img/top_right.jpg); background-repeat: no-repeat; background-position: 00;"></div>
+                            </div></DIV>
+
+                        </td>
+                    </tr>
+                    <tr><td class="bg3"><img width="697" title="" src="@Url.Content("~/img/transparent.gif")" height="3" alt=""></td></tr>
+                </table><table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tr><td width="100%" colspan="11"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="3" alt=""></td></tr>
+                    <tr>
+                        <td><img width="5" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td>
+                        <td nowrap="" align="right"><span class="uportal-text-small"><A target="_top" href="">My Account</A><BR><a target="_top" href="">Content Layout</a></span></td>
+                        <td><img width="2" title="" src="@Url.Content("~/img/app_divider.gif")" hspace="10" height="36" alt=""></td>
+                        <td width="100%" nowrap="">
+                            <span id="welcome" class="uportal-channel-text">
+
+
+                                <table border='0'>
+                                    <tr valign='baseline'>
+                                        <td><span class="uportal-label">Welcome 
+                                            @Html.DisplayFor(s => s.StudentFirstMidName) @Html.DisplayFor(s => s.StudentLastName)
+                                            </span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="uportal-text-small">You are currently logged in.</span></td>
+                                    </tr>
+                                </table>
+                                &nbsp;
+                            </span>
+                        </td>
+                        <td valign="middle"></td>
+                        <td><img width="2" title="" src="@Url.Content("~/img/app_divider.gif")" hspace="10" height="36" alt=""></td>
+                        <TD align="CENTER"><A target="_blank" href="https://outlook.com/my.centennialcollege.ca"><IMG hspace="6" border="0" height="26" width="39" name="o365mail" alt="Office 365 Email" src="@Url.Content("~/img/email_dft.gif")"><BR><SPAN class="uportal-label">Email</SPAN></A></TD>
+                        <TD align="CENTER"><A target="_blank" href="https://outlook.office.com/owa/?realm=my.centennialcollege.ca#path=/calendar"><IMG hspace="6" border="0" height="26" width="39" name="o365calendar" alt="Office 365 Calendar" src="@Url.Content("~/img/calendar_dft.gif")"><BR><SPAN class="uportal-label">Calendar</SPAN></A></TD>
+                        <td nowrap="" align="center"><a href=""><img width="39" title="Find Working Groups, alt+g" src="@Url.Content("~/img/groups_dft.gif")" name="cc" hspace="6" height="26" border="0" alt="Find Working Groups, alt+g"><br><span class="uportal-label">Groups</span></a></td>
+                        <td><img width="2" title="" src="@Url.Content("~/img/app_divider.gif")" hspace="7" height="36" alt=""></td>
+                        <td align="center">
+                            <a target="_top" href="/Account/Logout"><img width="39" title="Exit the Portal, alt+l" src="@Url.Content("~/img/logout_dft.gif")" name="ee" hspace="6" height="26" border="0" alt="Exit the Portal, alt+l"><br><span class="uportal-label">Logout</span></a>
+                        </td>
+                        <td align="center"><a href=""><img width="39" title="Get help information for the portal, alt+q" src="@Url.Content("~/img/help_dft.gif")" name="ff" hspace="6" height="26" border="0" alt="Get help information for the portal, alt+q"><br><span class="uportal-label">Help</span></a></td>
+                    </tr>
+                    <tr><td width="100%" colspan="11"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="3" alt=""></td></tr>
+                    <tr><td width="100%" colspan="11"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="10" alt=""></td></tr>
+                </table><table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <td>
+                            <table id="tabs_tda" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td nowrap="" class="tabon"><div class="tabon"><a target="_top" id="tab" href=""><b>myCentennial</b></a></div></td>
+                                    <td nowrap="" class="taboff"><div class="taboff"><a target="_top" id="tab" href="">Student Services</a></div></td>
+                                    <td nowrap="" class="taboff"><div class="taboff"><a target="_top" id="tab" href="">Sample</a></div></td>
+                                    <td nowrap="" class="taboff"><div class="taboff"><a target="_top" id="tab" href="">Academic English</a></div></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td nowrap="" class="cpdate" align="right">
+                            <span id="date_txt" class="uportal-text-small">
+                                <script language="JavaScript1.2">
+                                    var months = new Array(13);
+                                    months[1] = 'January';
+                                    months[2] = 'February';
+                                    months[3] = 'March';
+                                    months[4] = 'April';
+                                    months[5] = 'May';
+                                    months[6] = 'June';
+                                    months[7] = 'July';
+                                    months[8] = 'August';
+                                    months[9] = 'September';
+                                    months[10] = 'October';
+                                    months[11] = 'November';
+                                    months[12] = 'December';
+                                    var time = new Date();
+                                    var lmonth = months[time.getMonth() + 1];
+                                    var date = time.getDate();
+                                    var year = time.getFullYear();
+                                    document.write(lmonth + ' ');
+                                    document.write(date + ', ' + year);
+                                </script>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr><td width="100%" colspan="2" class="bgtabon"><img width="10" title="" src="@Url.Content("~/img/transparent.gif")" height="3" alt=""></td></tr>
+                    <tr><td colspan="2"><img width="10" title="" src="@Url.Content("~/img/transparent.gif")" height="10" alt=""></td></tr>
+                </table><span id="content">
+                    <table width="100%" class="uportal-background-content" cellspacing="0" cellpadding="0" border="0">
+                        <tr><td width="25%"><img height="3" width="10" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td><img height="3" width="1" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td width="50%"><img height="3" width="10" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td><img height="3" width="1" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td width="25%"><img height="3" width="10" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td></tr>
+                        <tr class="uportal-background-content">
+                            <td valign="top" width="25%">
+                                <table width="100%" id="channel" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr><td class="bg1"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="4" alt=""></td></tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr><td class="bgmlight"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr>
+                                        <td>
+                                            <div class="border">
+                                                <table width="98%" cellspacing="0" cellpadding="3" border="0" align="center">
+                                                    <tr><td><span class="uportal-head14-bold">Personal Announcements</span></td><td valign="top" nowrap="nowrap" align="right"><a href=""><img title="Expand Personal Announcements channel to fill screen" alt="Expand Personal Announcements channel to fill screen" src="@Url.Content("~/img/focus.gif")" width="16" height="16" border="0"></a><a href=""><img title="Minimize Personal Announcements channel to present less information" alt="Minimize Personal Announcements channel to present less information" src="@Url.Content("~/img/min.gif")" width="16" height="16" border="0"></a><img src="@Url.Content("~/img/chan_remove_na.gif")" width="16" height="16"></td></tr>
+                                                    <tr>
+                                                        <td width="100%" colspan="2">
+
+                                                            <table cellpadding="0" cellspacing="0" border="0" width="100%" id="teaser_abm_tbl">
+
+
+                                                                <tr>
+                                                                    <td><span class="uportal-channel-text"><a href="">Microsoft Office Professional Now Available for Faculty and Students</a></span></td>
+                                                                </tr>
+                                                                <tr><td><img src="@Url.Content("~/img/dot-blank.gif")" height="7" width="1" /></td></tr>
+
+
+                                                            </table>
+
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="20" alt=""></td></tr>
+                                </table><table width="100%" id="channel" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr><td class="bg1"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="4" alt=""></td></tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr><td class="bgmlight"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr>
+                                        <td>
+                                            <div class="border">
+                                                <table width="98%" cellspacing="0" cellpadding="3" border="0" align="center">
+                                                    <tr><td><span class="uportal-head14-bold">Campus Announcements</span></td><td valign="top" nowrap="nowrap" align="right"><a href=""><img title="Expand Campus Announcements channel to fill screen" alt="Expand Campus Announcements channel to fill screen" src="@Url.Content("~/img/focus.gif")" width="16" height="16" border="0"></a><a href=""><img title="Minimize Campus Announcements channel to present less information" alt="Minimize Campus Announcements channel to present less information" src="@Url.Content("~/img/min.gif")" width="16" height="16" border="0"></a><img src="@Url.Content("~/img/chan_remove_na.gif")" width="16" height="16"></td></tr>
+                                                    <tr>
+                                                        <td width="100%" colspan="2">
+
+                                                            <table cellpadding="0" cellspacing="0" border="0" width="100%" id="teaser_abm_tbl">
+
+
+                                                                <tr>
+                                                                    <td><span class="uportal-channel-text"><a href="">Employer on Campus Information Session</a></span></td>
+                                                                </tr>
+                                                                <tr><td><img src="@Url.Content("~/img/dot-blank.gif")" height="7" width="1" /></td></tr>
+
+
+                                                            </table>
+
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="20" alt=""></td></tr>
+                                </table><table width="100%" id="channel" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr><td class="bg1"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="4" alt=""></td></tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr><td class="bgmlight"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr>
+                                        <td>
+                                            <div class="border">
+                                                <table width="98%" cellspacing="0" cellpadding="3" border="0" align="center">
+                                                    <tr><td><span class="uportal-head14-bold">Career Services & Co-op Education</span></td><td valign="top" nowrap="nowrap" align="right"><a href=""><img title="Expand Career Services &amp; Co-op Education channel to fill screen" alt="Expand Career Services &amp; Co-op Education channel to fill screen" src="@Url.Content("~/img/focus.gif")" width="16" height="16" border="0"></a><a href=""><img title="Minimize Career Services &amp; Co-op Education channel to present less information" alt="Minimize Career Services &amp; Co-op Education channel to present less information" src="@Url.Content("~/img/min.gif")" width="16" height="16" border="0"></a><a onclick="return confirm('Are you sure you want to remove the Career Services &amp; Co-op Education channel from your layout?')" href=""><img title="Remove Career Services &amp; Co-op Education channel from your layout" alt="Remove Career Services &amp; Co-op Education channel from your layout" src="@Url.Content("~/img/remove.gif")" width="16" height="16" border="0"></a></td></tr>
+                                                    <tr>
+                                                        <td width="100%" colspan="2">
+                                                            <div xmlns:cp="http://www.campuspipeline.com" class="tcc_sections">
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="https://my.centennialcollege.ca/jsp/sso/orbis/loginsso.jsp" id="p_chan_links_lnk" name="p_chan_links_lnk">HireCentennial</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <p>
+                                                                                <br />
+                                                                                A new on-line job portal for employers and students to connect!
+                                                                            </p>
+                                                                            <p>
+                                                                                <span style="font-size: smaller;">
+                                                                                    <span style="font-family:
+Arial;">
+                                                                                        (Browser Required: Firefox or Internet 7+ or higher
+                                                                                        browser)
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p><div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <span id="p_chan_text" class="uportal-text">
+                                                                            <p>
+                                                                                <span style="font-size: x-small;">
+                                                                                    Employment Success Pack<br />
+                                                                                    <br type="_moz" />
+                                                                                </span><font size="1">The Employment Success Pack has moved to HireCentennial. &nbsp;Click the HireCentennial link below to access program specific sample resumes, cover letters and tip sheets. The Employment Success Pack is located in the left hand &quot;Career&quot; menu on HireCentennial.</font>
+                                                                            </p>
+                                                                        </span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="20" alt=""></td></tr>
+                                </table>
+                            </td>
+                            <td class="vrule" width="1"><img height="1" width="15" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td>
+                            <td valign="top" width="50%">
+                                <table width="100%" id="channel" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr><td class="bg1"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="4" alt=""></td></tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr><td class="bgmlight"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr>
+                                        <td>
+                                            <div class="border">
+                                                <table width="98%" cellspacing="0" cellpadding="3" border="0" align="center">
+                                                    <tr><td><span class="uportal-head14-bold">Email Announcement</span></td><td valign="top" nowrap="nowrap" align="right"><a href=""><img title="Expand Email Announcement channel to fill screen" alt="Expand Email Announcement channel to fill screen" src="@Url.Content("~/img/focus.gif")" width="16" height="16" border="0"></a><a href=""><img title="Minimize Email Announcement channel to present less information" alt="Minimize Email Announcement channel to present less information" src="@Url.Content("~/img/min.gif")" width="16" height="16" border="0"></a><img src="@Url.Content("~/img/chan_remove_na.gif")" width="16" height="16"></td></tr>
+                                                    <tr>
+                                                        <td width="100%" colspan="2">
+                                                            <table cellspacing="5">
+                                                                <tr>
+                                                                    <th align="left">Welcome to Office 365</th>
+                                                                    <th align="right">
+                                                                        <a href="http://outlook.com/my.centennialcollege.ca" target="_blank">
+                                                                            <img src="http://my.centennialcollege.ca/mydocs/images/office365logo_small.png">
+                                                                        </a>
+                                                                    </th>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td align="left" colspan="2" style="width:80%;">
+                                                                        <p>
+                                                                            Your email account has successfully transitioned to Office 365.
+                                                                            All email has been transferred from your old account into your new
+                                                                            Office 365 account. Log into your Office 365 account using the
+                                                                            following credentials:
+                                                                        </p>
+
+                                                                        <p>Login ID: <strong>@Html.DisplayFor(s => s.StudentEmail)@@my.centennialcollege.ca</strong>.</p>
+
+                                                                        <p>
+                                                                            Password: (Initially set to your date of birth in the format
+                                                                            MmmDDYYYY (case sensitive) eg Sep211984 for September 21, 1984)
+                                                                        </p>
+
+                                                                        <p>
+                                                                            Your new email and calendar is accessible from the respective
+                                                                            icons in the toolbar above or by selecting the icons below:
+                                                                        </p>
+
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td></td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td nowrap="" align="center">
+                                                                                    <a href="https://outlook.com/my.centennialcollege.ca" target="_blank">
+                                                                                        <img width="39" title="Read E-mail, alt+m" src="@Url.Content("~/img/email_dft.gif")" name="o365mailchnl" hspace="6" height="26" border="0" alt="Read E-mail, alt+m"><br>
+                                                                                        <span class="uportal-label">E-mail</span>
+                                                                                    </a>
+                                                                                </td>
+                                                                                <td nowrap="" align="center">
+                                                                                    <a href="https://outlook.office.com/owa/?realm=my.centennialcollege.ca#path=/calendar" target="_blank">
+                                                                                        <img width="39" title="Review Calendar, alt+c" src="@Url.Content("~/img/calendar_dft.gif")" name="o365calendarchnl" hspace="6" height="26" border="0" alt="Review Calendar, alt+c"><br>
+                                                                                        <span class="uportal-label">Calendar</span>
+                                                                                    </a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+
+                                                                        <br>
+                                                                        You can always access your email and Office 365 by using <a href="https://outlook.com/my.centennialcollege.ca" target="_blank">https://outlook.com/my.centennialcollege.ca</a><br>
+
+                                                                        <br>
+
+
+                                                                        <p>
+                                                                            <i>
+                                                                                Note: You must log out of Office 365/Outlook as well as
+                                                                                myCentennial and close all browsers to ensure you are completely
+                                                                                logged out of both systems.
+                                                                            </i>
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="20" alt=""></td></tr>
+                                </table><table width="100%" id="channel" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr><td class="bg1"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="4" alt=""></td></tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr><td class="bgmlight"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr>
+                                        <td>
+                                            <div class="border">
+                                                <table width="98%" cellspacing="0" cellpadding="3" border="0" align="center">
+                                                    <tr><td><span class="uportal-head14-bold">Access Centennial Web Services</span></td><td valign="top" nowrap="nowrap" align="right"><a href="tag.6d3083c4306c6d22.render.userLayoutRootNode.uP?uP_root=n43&amp;padding=true"><img title="Expand Access Centennial Web Services channel to fill screen" alt="Expand Access Centennial Web Services channel to fill screen" src="@Url.Content("~/img/focus.gif")" width="16" height="16" border="0"></a><a href=""><img title="Minimize Access Centennial Web Services channel to present less information" alt="Minimize Access Centennial Web Services channel to present less information" src="@Url.Content("~/img/min.gif")" width="16" height="16" border="0"></a><a onclick="return confirm('Are you sure you want to remove the Access Centennial Web Services channel from your layout?')" href="tag.6d3083c4306c6d22.render.userLayoutRootNode.uP?uP_remove_target=n43"><img title="Remove Access Centennial Web Services channel from your layout" alt="Remove Access Centennial Web Services channel from your layout" src="@Url.Content("~/img/remove.gif")" width="16" height="16" border="0"></a></td></tr>
+                                                    <tr>
+                                                        <td width="100%" colspan="2">
+                                                            <div xmlns:cp="http://www.campuspipeline.com" class="tcc_sections">
+                                                                <ul class="uportal-text">
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://netdrive.centennialcollege.ca" id="p_chan_links_lnk" name="p_chan_links_lnk">H-Drive</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <p>
+                                                                                Enter your Novell log-in ID and password and in seconds you will be
+                                                                                looking at the contents of your H: drive. You will also have access to
+                                                                                any shared drives you are using. Use the menu bar at the top of the
+                                                                                drive list to help you identify and perform various functions on your
+                                                                                files.
+                                                                            </p><div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://domino.centennialcollege.ca" id="p_chan_links_lnk" name="p_chan_links_lnk">iNotes</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            Access your Centennial College email<div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://domino.centennialcollege.ca/CentennialApplications/phonedir.nsf/Web+By+Last+name?openview" id="p_chan_links_lnk" name="p_chan_links_lnk">Telephone Directory</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <p>Centennial College internal telephone directory.</p><div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="20" alt=""></td></tr>
+                                </table>
+                            </td>
+                            <td class="vrule" width="1"><img height="1" width="14" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td>
+                            <td valign="top" width="25%">
+                                <table width="100%" id="channel" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr><td class="bg1"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="4" alt=""></td></tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr><td class="bgmlight"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr>
+                                        <td>
+                                            <div class="border">
+                                                <table width="98%" cellspacing="0" cellpadding="3" border="0" align="center">
+                                                    <tr><td><span class="uportal-head14-bold">My Online Services</span></td><td valign="top" nowrap="nowrap" align="right"><a href=""><img title="Expand My Online Services channel to fill screen" alt="Expand My Online Services channel to fill screen" src="@Url.Content("~/img/focus.gif")" width="16" height="16" border="0"></a><a href="tag.6d3083c4306c6d22.render.userLayoutRootNode.uP?uP_tcattr=minimized&amp;minimized_channelId=u11l1n539&amp;minimized_u11l1n539_value=true"><img title="Minimize My Online Services channel to present less information" alt="Minimize My Online Services channel to present less information" src="@Url.Content("~/img/min.gif")" width="16" height="16" border="0"></a><img src="@Url.Content("~/img/chan_remove_na.gif")" width="16" height="16"></td></tr>
+                                                    <tr>
+                                                        <td width="100%" colspan="2">
+                                                            <div xmlns:cp="http://www.campuspipeline.com" class="tcc_sections">
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <span id="p_chan_text" class="uportal-text"><p><strong><a href="https://e.centennialcollege.ca/" target="_blank">eCentennial</a></strong></p></span>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong>@Html.ActionLink("Personal Information", "PersonalInfo", "Student")</strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong>@Html.ActionLink("Build / Change Timetable & View Registration Information","Index","Registration")</strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong>@Html.ActionLink("View Payment Option & Pay Fees","FeeAccountSummary","Registration")</strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong>@Html.ActionLink("Student Record Information","StudentRecord","Student")</strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong>@Html.ActionLink("View My Timetable","ViewTimetable","Registration")</strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong>@Html.ActionLink("Check My Student Status", "RegistrationStatus", "Registration")</strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span id="p_chan_text" class="uportal-text">
+                                                                            <p>
+                                                                                <strong><font color="#0000ff"><a href="">T2202A Tax Receipts</a></font></strong><br />
+                                                                                
+                                                                            </p>
+                                                                        </span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="" href="" id="p_chan_links_lnk" name="p_chan_links_lnk">ATOMS: CSD Test Booking</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong><a target="" href="" id="p_chan_links_lnk" name="p_chan_links_lnk">Scholarships and Bursaries Questionnaire</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong><a target="" href="" id="p_chan_links_lnk" name="p_chan_links_lnk">Apply for  Scholarships and Bursaries</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong><a target="" href="" id="p_chan_links_lnk" name="p_chan_links_lnk">My Courses</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <span id="p_chan_text" class="uportal-text">Double clicking or clicking multiple times on the above links may invalidate your connection to "My Online Services" and you may be presented with a login screen.  If this happens, please log out of myCentennial and log in again.</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="20" alt=""></td></tr>
+                                </table><table width="100%" id="channel" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr><td class="bg1"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="4" alt=""></td></tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr><td class="bgmlight"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="1" alt=""></td></tr>
+                                    <tr>
+                                        <td>
+                                            <div class="border">
+                                                <table width="98%" cellspacing="0" cellpadding="3" border="0" align="center">
+                                                    <tr><td><span class="uportal-head14-bold">Centennial Resources</span></td><td valign="top" nowrap="nowrap" align="right"><a href="tag.6d3083c4306c6d22.render.userLayoutRootNode.uP?uP_root=u11l1n85&amp;padding=true"><img title="Expand Centennial Resources channel to fill screen" alt="Expand Centennial Resources channel to fill screen" src="@Url.Content("~/img/focus.gif")" width="16" height="16" border="0"></a><a href="tag.6d3083c4306c6d22.render.userLayoutRootNode.uP?uP_tcattr=minimized&amp;minimized_channelId=u11l1n85&amp;minimized_u11l1n85_value=true"><img title="Minimize Centennial Resources channel to present less information" alt="Minimize Centennial Resources channel to present less information" src="@Url.Content("~/img/min.gif")" width="16" height="16" border="0"></a><img src="@Url.Content("~/img/chan_remove_na.gif")" width="16" height="16"></td></tr>
+                                                    <tr>
+                                                        <td width="100%" colspan="2">
+                                                            <div xmlns:cp="http://www.campuspipeline.com" class="tcc_sections">
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/student-life/alumni-development/alumni/" id="p_chan_links_lnk" name="p_chan_links_lnk">Alumni</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/colts/" id="p_chan_links_lnk" name="p_chan_links_lnk">Athletics</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.ccsai.ca" id="p_chan_links_lnk" name="p_chan_links_lnk">CCSAI</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="https://www.centennialcollege.ca/student-life/student-services/the-counselling-centre/" id="p_chan_links_lnk" name="p_chan_links_lnk">Counselling Services</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/student-life/student-services/centre-for-students-with-disabilities/" id="p_chan_links_lnk" name="p_chan_links_lnk">CSD</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/admissions/financial-aid/" id="p_chan_links_lnk" name="p_chan_links_lnk">Financial Aid</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="https://www.centennialcollege.ca/mycentennial/students/international-students/" id="p_chan_links_lnk" name="p_chan_links_lnk">International Centre</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="https://my.centennialcollege.ca/jsp/sso/orbis/loginsso.jsp" id="p_chan_links_lnk" name="p_chan_links_lnk">Job Search Services</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/programs-courses/international-education/global-experience-office/" id="p_chan_links_lnk" name="p_chan_links_lnk">Global Experience </a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div class="uportal-text">
+                                                                            <img name="p_chan_img" src="@Url.Content("~/img/2558699447297708.jpg")"><br>
+                                                                            <span class="p_chan_img_cap"></span>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                                <ul class="uportal-text no-bullet">
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/mycentennial/your-support/academic-support/bookstore-information/" id="p_chan_links_lnk" name="p_chan_links_lnk">Bookstore</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/student-life/campus-services/child-care-centre/" id="p_chan_links_lnk" name="p_chan_links_lnk">Child Care</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://www.centennialcollege.ca/programs-courses/schools/school-of-continuing-education/" id="p_chan_links_lnk" name="p_chan_links_lnk">Continuing Education</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <strong><a target="_blank" href="http://library.centennialcollege.ca" id="p_chan_links_lnk" name="p_chan_links_lnk">Libraries</a></strong>
+                                                                        <div class="subsection_content">
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr><td><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="20" alt=""></td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr><td width="25%"><img height="3" width="10" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td><img height="3" width="1" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td width="50%"><img height="3" width="10" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td><img height="3" width="1" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td><td width="25%"><img height="3" width="10" title="" alt="" src="@Url.Content("~/img/transparent.gif")"></td></tr>
+                    </table>
+                </span><table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td colspan="3" class="bgtabon"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="2" alt=""></td></tr><tr><td colspan="3"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="5" alt=""></td></tr><tr><td><table width="100%" cellspacing="5" cellpadding="5" border="0"><tr><td width="100%" valign="top"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="5" alt=""><br clear="all"><img width="2" title="" src="@Url.Content("~/img/transparent.gif")" hspace="0" height="40" alt="" align="left"><span id="copyright">Copyright &copy; SunGard Higher Education 1998 - 2011.</span></td><td valign="top" nowrap="" align="right"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="5" alt=""><br><span id="totop_ftr" class="uportal-text-small"><a href="#TOP"><B>Top</B></a></span></td><td width="179" align="right"><a href=""><img width="179" title="Powered by SunGard Higher Education" src="@Url.Content("~/img/foot_logo.gif")" height="52" border="0" alt="Powered by SunGard Higher Education"></a></td></tr></table></td></tr></table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

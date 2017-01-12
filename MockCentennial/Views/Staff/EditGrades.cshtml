@@ -1,0 +1,21 @@
+﻿@model IEnumerable<MockCentennial.Models.SchoolModel.Grade>
+
+<table>
+    <tr>
+        <th>Student number</th>
+        <th>Last name</th>
+        <th>First name</th>
+        <th>Grade</th>
+        <th><button type="button">Save ALL</button></th>
+    </tr>
+    @foreach (var s in Model)
+    {
+        <tr>
+            <td>@s.StudentNum</td>
+            <td>@s.StudentLastName</td>
+            <td>@s.StudentFirstMidName</td>
+            <td>@Html.TextBoxFor(m => s.GradeNumeric, new {id = $"e_{s.EnrollmentId}"})</td>
+            <td><button type="button" onclick="updateGrade(@s.EnrollmentId, @s.StudentId)">Save</button></td>
+        </tr>
+    }
+</table>

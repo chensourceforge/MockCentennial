@@ -1,0 +1,263 @@
+﻿@model MockCentennial.Models.Student
+@{
+    ViewBag.Title = "Change Student Info";
+}
+
+<fieldset>
+    <legend>Student Info</legend>
+    @using (Html.BeginForm("ChangeStudentInfo", "Staff", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td>Student Number</td>
+                <td>@Html.TextBoxFor(student => student.StudentNum, new { @readonly = "readonly" })</td>
+            </tr>
+            <tr>
+                <td>First Name</td>
+                <td>@Html.TextBoxFor(student => student.StudentFirstMidName)</td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td>@Html.TextBoxFor(student => student.StudentLastName)</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>@Html.TextBoxFor(student => student.StudentEmail)</td>
+            </tr>
+            <tr>
+                <td>Is in good academic standing</td>
+                <td>@Html.CheckBoxFor(student => student.StudentAcademicStanding)</td>
+            </tr>
+            <tr>
+                <td>Has holds</td>
+                <td>@Html.CheckBoxFor(student => student.StudentHasHolds)</td>
+            </tr>
+            <tr>
+                <td>Can register</td>
+                <td>@Html.CheckBoxFor(student => student.StudentCanRegister)</td>
+            </tr>
+            <tr>
+                <td>Start Date</td>
+                <td>@Html.EditorFor(student => student.StudentStartDate)</td>
+            </tr>
+            <tr>
+                <td>Reset Password</td>
+                <td>@Html.CheckBox("resetPassword", false)</td>
+            </tr>
+        </table>
+
+        @Html.HiddenFor(student=>student.StudentId,new {id= "StudentId" })
+        <div>
+            <input type="submit" value="Save Changes" />
+        </div>
+    }
+</fieldset>
+
+<fieldset>
+    <legend>Program Registration</legend>
+    <button type="button" onclick="getData(this, @Model.StudentId, 'ProgramRegistration')">Load</button>
+    <div id="ProgramRegistration"></div>
+</fieldset>
+
+<fieldset>
+    <legend>Course Enrollment</legend>
+    <button type="button" onclick="getData(this, @Model.StudentId, 'Enrollment')">Load</button>
+    <div id="Enrollment"></div>
+</fieldset>
+
+<fieldset>
+    <legend>Student Transcript</legend>
+    <button type="button" onclick="getData(this, @Model.StudentId, 'Transcript')">Load</button>
+    <div id="Transcript"></div>
+</fieldset>
+
+<fieldset>
+    <legend>Transfer Credits</legend>
+    <button type="button" onclick="getData(this, @Model.StudentId, 'TransferCredit')">Load</button>
+    <div id="TransferCredit"></div>
+</fieldset>
+
+
+<script>
+    function getData(elem, studentId, what) {
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/GetStudent' + what,
+            data: {
+                StudentId: studentId
+            }
+        }).done(function(res) {
+            elem.style.display = 'none';
+            $('#'+what).html(res);
+        });
+    }
+
+    function updateTranscript(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/UpdateStudentTranscript',
+            data: {
+                StudentId: $('#StudentId').val(),
+                transcriptText: $('#'+id).val()
+            }
+        }).done(function(res) {
+            if (res.success) {
+                $('#Transcript').html('done');
+            }
+        });
+    }
+
+    function updateCurrentSemester(studentProgramId, id) {
+        var currentSemester = parseInt($('#' + id).val());
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/UpdateCurrentSemester',
+            data: {
+                StudentProgramId: studentProgramId,
+                CurrentSemester: currentSemester
+            }
+        }).done(function(res) {
+            if (res.success) {
+                alert('Current semester in student program updated successfully');
+            } else {
+                alert('An error occurred while updating current semester in student program.');
+            }
+        });
+    }
+
+    function cancelRegistration(studentId, termId, registrationId, textId, actionElem) {
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/CancelRegistration',
+            data: {
+                StudentId: studentId,
+                TermId: termId,
+                RegistrationId: registrationId
+            }
+        }).done(function(res) {
+            if (res.success) {
+                alert('Registration was cancelled successfully.');
+                document.getElementById(textId).style.textDecoration = 'line-through';
+                actionElem.style.display = 'none';
+            } else {
+                alert('An error occurred while cancelling registration.');
+            }
+        });
+    }
+
+    function getSectionsForTermCourse(termCourseElem, outputContainer, outputElem) {
+        var termCourseId = parseInt($('#' + termCourseElem).val());
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/GetSectionOptions',
+            data: {
+                TermCourseId: termCourseId
+            }
+        }).done(function (res) {
+            var output = '';
+            for (var i in res) {
+                output += '<option value="' + res[i].SectionId + '">' + res[i].SectionNum + '</option>';
+            }
+            $('#' + outputElem).html(output);
+            $('#' + outputContainer).show();
+        });
+    }
+
+    function getEnrollmentDetails(inputId, outputId) {
+        var termId = parseInt($('#' + inputId).val());
+        if (isNaN(termId)) return;
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/GetStudentEnrollmentForTerm',
+            data: {
+                StudentId: $('#StudentId').val(),
+                TermId: termId
+            }
+        }).done(function(res) {
+            $('#' + outputId).html(res);
+        });
+    }
+
+    function updateEnrollmentSection(enrollmentId, sectionElem) {
+        var sectionId = parseInt($('#' + sectionElem).val());
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/UpdateEnrollmentSection',
+            data: {
+                EnrollmentId: enrollmentId,
+                SectionId: sectionId
+            }
+        }).done(function (res) {
+            if (res.success) {
+                alert('Enrollment section updated successfully.');
+            } else {
+                alert('Oops! An error was encountered while updating section.');
+            }
+        });
+    }
+
+    function dropEnrollment(enrollmentId, rowId) {
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/DropEnrollment',
+            data: {
+                EnrollmentId: enrollmentId
+            }
+        }).done(function (res) {
+            if (res.success) {
+                alert('Enrollment in course was dropped successfully.');
+                document.getElementById(rowId).style.display = 'none';
+            } else {
+                alert('An error was encountered while dropping the enrollment.');
+            }
+        });
+    }
+
+    function addEnrollment(sectionIdElem, termId, refreshElem) {
+        var sectionId = parseInt($('#' + sectionIdElem).val());
+        var studentId = parseInt($('#StudentId').val());
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/AddEnrollment',
+            data: {
+                StudentId: studentId,
+                SectionId: sectionId
+            }
+        }).done(function (status) {
+            if (status.success) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Staff/GetStudentEnrollmentForTerm',
+                    data: {
+                        StudentId: studentId,
+                        TermId: termId
+                    }
+                }).done(function(content) {
+                    $('#' + refreshElem).html(content);
+                });
+            } else {
+                alert('An error occurred during enrollment.');
+            }
+        });
+    }
+
+    function addTransferCredit(school, courseId, gradeLetter) {
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/AddTransferCredit',
+            data: {
+                StudentId: $('#StudentId').val(),
+                CourseId: $('#' + courseId).val(),
+                school: $('#' + school).val(),
+                gradeLetter: $('#' + gradeLetter).val()
+            }
+        }).done(function (res) {
+            if (res.success) {
+                alert('Transfer credit added successfully.');
+            } else {
+                alert('Oops! An error was encountered while adding the transfer credit.');
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,31 @@
+.roomFromTop {
+    margin-top: 10px;
+}
+
+.bg1 {background-color: #B5D000;}
+
+.bg3 {background-color: #70B4F2;line-height: 0;}
+
+.bgtabon {background-color: #70B4F2;line-height: 0;}
+
+.bgtaboff {background-color: #B5D000;}
+
+.texttabon {color: #FFFFFF;}
+
+.texttaboff {color: #000000;}
+
+td.tabon { background-color: #70B4F2; color: #FFFFFF; }
+.tabon A:link { color: #FFFFFF; }
+.tabon A:visited { color: #FFFFFF; }
+.tabon A:active { color: #FFFFFF; }
+.tabon A:hover { color: #FFFFFF; }
+
+td.taboff { background-color: #B5D000; color: #000000; }
+.taboff A:link { color: #000000; }
+.taboff A:visited { color: #000000;  }
+.taboff A:active { color: #000000;  }
+.taboff A:hover { color: #000000;  }
+
+.ChanBoxBg {background-image: url(/media/org/jasig/portal/channels/CUserPreferences/tab-column/channel/chan_box_bg.gif); background-color: #70B4F2;}
+.setupBox {border:2px #70B4F2 solid;}
+

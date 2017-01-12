@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @*@Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")*@
+    @Scripts.Render("~/bundles/jquery")
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/web_defaultmenu.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/portal.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/style.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/custom.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/style2.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/cpAlert.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/studentTemplate.css")">
+</head>
+<body>
+
+
+<table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr><td valign="top">
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr class="bg1"><td nowrap="nowrap"><img title="School Logo" src="@Url.Content("~/img/image_topnav_2.jpg")" height="30" border="0" alt="School Logo"></td></tr>
+            <tr><td class="bg3"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="3" alt=""></td></tr>
+        </table>
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr><td width="100%" colspan="9"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="3" alt=""></td></tr>
+            <tr><td><a target="_top" href="/Home"><img width="14" vspace="2" src="@Url.Content("~/img/arrow_prev.gif")" hspace="7" height="9" border="0" alt="Back tomyCentennialTab" title="Back tomyCentennialTab"></a></td>
+                <td width="100%" nowrap=""><span id="backto" class="uportal-text-small"><a target="_top" href="/Home">Back to<br><b>myCentennial&nbsp;Tab</b></a></span></td>
+                <TD align="CENTER"><A target="_blank" href="https://outlook.com/my.centennialcollege.ca"><IMG hspace="6" border="0" height="26" width="39" name="o365mail" alt="Office 365 Email" src="@Url.Content("~/img/email_dft.gif")"><BR><SPAN class="uportal-label">Email</SPAN></A></TD>
+                <TD align="CENTER"><A target="_blank" href="https://outlook.office.com/owa/?realm=my.centennialcollege.ca#path=/calendar"><IMG hspace="6" border="0" height="26" width="39" name="o365calendar" alt="Office 365 Calendar" src="@Url.Content("~/img/calendar_dft.gif")"><BR><SPAN class="uportal-label">Calendar</SPAN></A></TD>
+                <td nowrap="" align="center"><a href=""><img width="39" title="Find Working Groups, alt+g" src="@Url.Content("~/img/groups_dft.gif")" name="cc" hspace="6" height="26" border="0" alt="Find Working Groups, alt+g"><br><span class="uportal-label">Groups</span></a></td><td><img width="2" title="" src="@Url.Content("~/img/app_divider.gif")" hspace="7" height="36" alt=""></td>
+                <td align="center"><a target="_top" href="/Account/Logout"><img width="39" title="Exit the Portal, alt+l" src="@Url.Content("~/img/logout_dft.gif")" name="ee" hspace="6" height="26" border="0" alt="Exit the Portal, alt+l"><br><span class="uportal-label">Logout</span></a></td>
+                <td align="center"><a href=""><img width="39" title="Get help information for the portal, alt+q" src="@Url.Content("~/img/help_dft.gif")" name="ff" hspace="6" height="26" border="0" alt="Get help information for the portal, alt+q"><br><span class="uportal-label">Help</span></a></td></tr>
+            <tr><td width="100%" colspan="9"><img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="3" alt=""></td></tr>
+        </table>
+    </td></tr>
+    <tr><td valign="bottom">
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr><td class="bgtabon">
+                @*<img width="1" title="" src="@Url.Content("~/img/transparent.gif")" height="2" alt="">*@
+            </td></tr>
+        </table>
+    </td></tr>
+</table>
+    <div class="headerwrapperdiv">
+        <table CLASS="plaintable" SUMMARY="This is main table for displaying Tab Items."
+               WIDTH="100%" cellSpacing=0 cellPadding=0 border=0>
+            <tr>
+                <TD CLASS="pldefault">
+                    <table CLASS="plaintable" SUMMARY="This table displays Tab Items."
+                           cellSpacing=0 cellPadding=0 border=0>
+                        <tr>
+                            <td class="tabon" height=22>
+                                <a href="">Personal Information</a>
+                            </td>
+                            <TD class="bgtabon" height=22 vAlign="top" align="right">
+                                <img src="@Url.Content("~/img/web_tab_corner_right.gif")" alt="Tab Corner Right" CLASS="headerImg" TITLE="Tab Corner Right" NAME="web_tab_corner_right" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=20 WIDTH=8 />
+                            </TD>
+                            <td class="taboff" height=22>
+                                <a href="">Student Services</a>
+                            </td>
+                            <TD class="bgtaboff" height=22 vAlign="top" align="right">
+                                <img src="@Url.Content("~/img/web_tab_corner_right.gif")" alt="Tab Corner Right" CLASS="headerImg" TITLE="Tab Corner Right" NAME="web_tab_corner_right" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=20 WIDTH=8 />
+                            </TD>
+                            <td class="taboff" height=22>
+                                <a href="">Change Term</a>
+                            </td>
+                            <TD class="bgtaboff" height=22 vAlign="top" align="right">
+                                <img src="@Url.Content("~/img/web_tab_corner_right.gif")" alt="Tab Corner Right" CLASS="headerImg" TITLE="Tab Corner Right" NAME="web_tab_corner_right" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=20 WIDTH=8 />
+                            </TD>
+                            <td class="taboff" height=22>
+                                <a href="">Student Awards and Financial Aid</a>
+                            </td>
+                            <TD class="bgtaboff" height=22 vAlign="top" align="right">
+                                <img src="@Url.Content("~/img/web_tab_corner_right.gif")" alt="Tab Corner Right" CLASS="headerImg" TITLE="Tab Corner Right" NAME="web_tab_corner_right" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=20 WIDTH=8 />
+                            </TD>
+                        </tr>
+                    </table>
+                </TD>
+            </tr>
+            <tr>
+                <TD class="bgtabon" width="100%" colSpan=2>
+                    <img src="@Url.Content("~/img/web_transparent.gif")" alt="Transparent Image" CLASS="headerImg" TITLE="Transparent Image" NAME="web_transparent" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=3 WIDTH=10/>
+                </TD>
+            </tr>
+        </table>
+
+        <table CLASS="plaintable" SUMMARY="This table displays Menu Items and Banner Search textbox."
+               WIDTH="100%">
+            <tr>
+                <TD CLASS="pldefault">
+                    <div class="headerlinksdiv2">
+                        <form>
+                            Search
+                            <SPAN class="fieldlabeltextinvisible"><LABEL for=keyword_in_id><SPAN class="fieldlabeltext">Search</SPAN></LABEL></SPAN>
+                            <input type="text" name="KEYWRD_IN" size="20" maxlength="65" ID="keyword_in_id" />
+                            <input type="submit" value="Go" />
+                        </form>
+                    </div>
+                </TD>
+                <TD CLASS="pldefault">
+                    <p class="rightaligntext"></p>
+                    <SPAN class="pageheaderlinks">
+                        <a href="" class="submenulinktext2" id="ssbbackurl">RETURN TO MENU</a>
+                        |
+                        <a href="" accesskey="2" class="submenulinktext2">SITE MAP</a>
+                        |
+                        <a href="" accesskey="H" target="_blank" class="submenulinktext2">HELP</a>
+                    </SPAN>
+                </TD>
+            </tr>
+        </table>
+    </div>
+    <div class="pagetitlediv">
+        <table CLASS="plaintable" SUMMARY="This table displays title and static header displays."
+               WIDTH="100%">
+            <tr>
+                <TD CLASS="pldefault">
+                    <h2>@ViewBag.Title</h2>
+                </TD>
+                <TD CLASS="pldefault">
+                    &nbsp;
+                </TD>
+                <TD CLASS="pldefault">
+                    <p class="rightaligntext"></p>
+                    <div class="staticheaders">
+                    </div>
+                </TD>
+            </tr>
+            <tr>
+                <TD class="bg3" width="100%" colSpan=3>
+                    @*<img src="@Url.Content("~/img/web_transparent.gif")" alt="Transparent Image" CLASS="headerImg" TITLE="Transparent Image" NAME="web_transparent" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=3 WIDTH=10/>*@
+                </TD>
+            </tr>
+        </table>
+        
+    </div>
+    
+    
+
+<div class="pagebodydiv">
+    <div>
+        @RenderBody()
+    </div>
+    
+
+    <table CLASS="plaintable roomFromTop" SUMMARY="This is table displays line separator at end of the page."
+           WIDTH="100%" cellSpacing=0 cellPadding=0 border=0>
+        <tr><TD class="bgtabon" width="100%" colSpan=2><img src="@Url.Content("~/img/web_transparent.gif")" alt="Transparent Image" CLASS="headerImg" TITLE="Transparent Image" NAME="web_transparent" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=3 WIDTH=10/></TD></tr>
+    </table>
+
+
+</div>
+    
+<div class="footerlinksdiv">
+    <SPAN class="pagefooterlinks">
+            <map name="Main_Menu_Links_F" title="Main Menu Links">
+                
+                    [ <a href="">Personal Information</a>
+                    | <a href="">Student Services</a>
+                    | <a href="">Student Awards and Financial Aid</a>
+                    ]
+            </map>
+        </SPAN>
+</div>
+    
+    <div class="pagefooterdiv">
+        <SPAN class="releasetext">Release: 8.7</SPAN>
+    </div>
+    <div class="poweredbydiv">
+    </div>
+    <DIV class="div1"></DIV>
+    <DIV class="div2"></DIV>
+    <DIV class="div3"></DIV>
+    <DIV class="div4"></DIV>
+    <DIV class="div5"></DIV>
+    <DIV class="div6"></DIV>
+    <div class="banner_copyright"> <br><h5>© 2016 Ellucian Company L.P. and its affiliates.<br></h5></div>
+
+
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+</body>
+</html>

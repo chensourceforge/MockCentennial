@@ -1,0 +1,62 @@
+﻿@model MockCentennial.Models.ProgramRegistration
+
+@{
+    ViewBag.Title = "Program Transfer";
+}
+
+@using (Html.BeginForm("ProgramTransfer", "Registration", FormMethod.Post))
+{
+    List<SelectListItem> programSelectList = new List<SelectListItem>();
+    foreach (var option in Model.ProgramOptions)
+    {
+        programSelectList.Add(new SelectListItem
+        {
+            Value = option.ProgramId.ToString(),
+            Text = $"[{option.ProgramCode}] {option.ProgramName}"
+        });
+    }
+
+    <table>
+        <tr>
+            <td>Starting from</td>
+            <td>@Html.DropDownListFor(m=>m.TermId,new SelectList(Model.TermOptions, "TermId","TermName"),"------",new {id= "TermId" })</td>
+        </tr>
+        <tr>
+            <td>New program</td>
+            <td>@Html.DropDownListFor(m=>m.ProgramId,programSelectList, "------", new { id = "ProgramId" })</td>
+        </tr>
+        <tr>
+            <td></td><td><button type="button" onclick="getConfirmation()">Transfer to New Program</button></td>
+        </tr>
+    </table>
+    <div id="confirmation" style="display: none;">
+        <blockquote>
+            In order to tranfer to another program, all of your currently enrolled courses will be dropped.
+            <br/>
+            Number of courses affected will be: <span id="changes" style="color: red;"></span>.
+            <br/>
+            Are you sure you want to make the transfer?
+        </blockquote>
+
+        <button type="submit">Yes, I want to make the transfer</button>
+    </div>
+}
+
+<script>
+    function getConfirmation() {
+        var confirmation = $('#confirmation');
+        var changes = $('#changes');
+        confirmation.hide();
+        var termId = parseInt($('#TermId').val());
+        var programId = parseInt($('#ProgramId').val());
+        if (isNaN(termId) || isNaN(programId)) return;
+        $.ajax({
+            type: 'GET',
+            url: '/Registration/ConfirmProgramTransfer',
+            data: { TermId: termId }
+        }).done(function(res) {
+            changes.html(res);
+            confirmation.show();
+        });
+    }
+</script>

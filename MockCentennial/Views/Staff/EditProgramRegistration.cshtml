@@ -1,0 +1,92 @@
+﻿@model MockCentennial.Models.ProgramRegistration
+
+@{
+    ViewBag.Title = "Edit Program Registration";
+}
+
+@section Styles {
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/chosen.css")">
+}
+
+<div>
+    @using (Html.BeginForm("TransferStudentProgram", "Staff", FormMethod.Post))
+    {
+        var termOptions = Model.TermOptions;
+        var programOptions = Model.ProgramOptions;
+        List<SelectListItem> termSelectList = new List<SelectListItem>();
+        foreach (var option in termOptions)
+        {
+            termSelectList.Add(new SelectListItem
+            {
+                Value = option.TermId.ToString(),
+                Text = option.TermName
+            });
+        }
+        List<SelectListItem> programSelectList = new List<SelectListItem>();
+        foreach (var option in programOptions)
+        {
+            programSelectList.Add(new SelectListItem
+            {
+                Value = option.ProgramId.ToString(),
+                Text = $"[{option.ProgramCode}] {option.ProgramName}"
+            });
+        }
+
+        
+        <table>
+            <tr>
+                <td>Student ID (internal)</td>
+                <td>@Html.TextBoxFor(model => model.StudentId, new { @readonly = "readonly" })</td>
+            </tr>
+            <tr>
+                <td>Changes to become effective starting from this term</td>
+                <td>@Html.DropDownListFor(model => model.TermId, termSelectList, "--------")</td>
+            </tr>
+            <tr>
+                <td>Transfer student to this program</td>
+                <td>@Html.DropDownListFor(model => model.ProgramId, programSelectList, "--------", new {@class = "chosen-select"})</td>
+            </tr>
+            <tr>
+                <td>Register student in this semester</td>
+                <td>@Html.DropDownListFor(model => model.CurrentSemester, new List<SelectListItem>(), "--------")</td>
+            </tr>
+        </table>
+        
+        <div>
+            <input type="submit" value="Save Changes" />
+        </div>
+    }
+</div>
+
+
+<script src='@Url.Content("~/Scripts/chosen.jquery.js")'></script>
+
+<script>
+    $(document).ready(function () {
+        $('select#ProgramId').change(function () {
+            getSemesters(this.value);
+        });
+        $('.chosen-select').chosen({width:"350px"});
+    });
+
+    function getSemesters(programId) {
+        programId = parseInt(programId);
+        if (isNaN(programId)) { return constructSemesterSelect(0); }
+        $.ajax({
+            url: '/Staff/GetSemesters',
+            data: { programId: programId },
+            type: 'GET'
+        }).done(function(res) {
+            constructSemesterSelect(parseInt(res));
+        });
+    }
+
+    function constructSemesterSelect(numSemesters) {
+        var optionStr = "<option>--------</option>";
+        for (var i = 1; i <= numSemesters; i++) {
+            optionStr += "<option value='"+i+"'>"+i+"</option>";
+        }
+        $('select#CurrentSemester').html(optionStr);
+    }
+</script>
+

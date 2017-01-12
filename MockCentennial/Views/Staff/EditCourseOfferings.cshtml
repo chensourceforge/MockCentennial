@@ -1,0 +1,125 @@
+﻿@model MockCentennial.Models.SchoolModel.TermCourseOffering
+@{
+    ViewBag.Title = "Edit Course Offerings";
+}
+
+@section Styles {
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/multi-select.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/editCourseOfferings.css")">
+}
+
+
+<div>
+    @using (Html.BeginForm("EditCourseOfferings", "Staff", FormMethod.Post))
+    {
+        List<SelectListItem> termSelectList = new List<SelectListItem>();
+        foreach (var t in Model.TermOptions)
+        {
+            termSelectList.Add(new SelectListItem
+            {
+                Value = t.TermId.ToString(),
+                Text = t.TermName
+            });
+        }
+        List<SelectListItem> courseSelectList = new List<SelectListItem>();
+        foreach (var c in Model.CourseOptions)
+        {
+            courseSelectList.Add(new SelectListItem
+            {
+                Value = c.CourseId.ToString(),
+                Text = $"{c.CourseCode}: {c.CourseTitle}"
+            });
+        }
+        <table>
+            <tr>
+                <td>Choose Term</td>
+                <td>
+                    @Html.DropDownListFor(model => model.TermId, termSelectList, "-----------")
+                    <button type="button" id="loadTerm">Load</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Courses Offered</td>
+                <td>@Html.ListBoxFor(model => model.CourseIds, courseSelectList)</td>
+            </tr>
+        </table>
+        <div>
+            <button type="submit">Save Changes</button>
+        </div>
+    }
+</div>
+
+<script src='@Url.Content("~/Scripts/jquery.quicksearch.js")'></script>
+<script src='@Url.Content("~/Scripts/jquery.multi-select.js")'></script>
+<script>
+    var _2colSelect;
+    $(document).ready(function () {
+        _2colSelect = $('select#CourseIds');
+
+        $('button#loadTerm').click(function () {
+            var termId = $('select#TermId').val();
+            termId = parseInt(termId);
+            if (isNaN(termId)) return;
+            $.ajax({
+                url: '/Staff/GetCoursesOffered',
+                type: 'GET',
+                data: { termId: termId }
+            })
+            .done(function (res) {
+                // multiSelect plugin doesn't work with int[]
+                var intArray = JSON.parse(res);
+                var stringArray = [];
+                intArray.forEach(function (elem) { stringArray.push(String(elem)); });
+                _2colSelect.multiSelect('deselect_all');
+                _2colSelect.multiSelect('select', stringArray);
+                _2colSelect.multiSelect('refresh');
+            });
+        });
+
+        _2colSelect.multiSelect({
+            selectableFooter: '<button type="button" onclick="moveAll(true); return false;">Select all</button>',
+            selectionFooter: '<button type="button" onclick="moveAll(false); return false;">Deselect all</button>',
+            selectableHeader: '<input type="text" class="search-input" autocomplete="off" placeholder="Courses NOT offered">',
+            selectionHeader: '<input type="text" class="search-input" autocomplete="off" placeholder="Courses offered">',
+            afterInit: function (ms) {
+                var that = this,
+                    $selectableSearch = that.$selectableUl.prev(),
+                    $selectionSearch = that.$selectionUl.prev(),
+                    selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                    selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which === 40) {
+                            that.$selectableUl.focus();
+                            return false;
+                        }
+                    });
+
+                that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which == 40) {
+                            that.$selectionUl.focus();
+                            return false;
+                        }
+                    });
+            },
+            afterSelect: function () {
+                this.qs1.cache();
+                this.qs2.cache();
+            },
+            afterDeselect: function () {
+                this.qs1.cache();
+                this.qs2.cache();
+            }
+        });
+    });
+    function moveAll(selectAll) {
+        if (selectAll) { _2colSelect.multiSelect('select_all'); }
+        else { _2colSelect.multiSelect('deselect_all'); }
+    }
+</script>
+
+
+

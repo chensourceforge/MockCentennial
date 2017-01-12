@@ -1,0 +1,44 @@
+﻿@using MockCentennial.Models.SchoolModel
+@{
+    Layout = null;
+    List<CourseOption> courseOptions = ViewBag.courseOptions;
+}
+
+<table>
+    <tr>
+        <td>Transferring From Institution Name</td>
+        <td><input type="text" id="TransferCreditSchool" placeholder="Example: Harvard University" value="" /></td>
+    </tr>
+    <tr>
+        <td>Transferring To Centennial Course</td>
+        <td><select id="TransferCreditCourseId">
+            @foreach (var c in courseOptions)
+            {
+                <option value="@c.CourseId">@c.CourseCode: @c.CourseTitle</option>
+            }
+        </select></td>
+    </tr>
+    <tr>
+        <td>Grade Awarded</td>
+        <td><select id="TransferCreditGradeLetter">
+            <option value="A+">A+</option>
+            <option value="A">A</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B">B</option>
+            <option value="B-">B-</option>
+            <option value="C+">C+</option>
+            <option value="C">C</option>
+            <option value="C-">C-</option>
+            <option value="D+">D+</option>
+            <option value="D">D</option>
+            <option value="D-">D-</option>
+        </select></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <button type="button" onclick="addTransferCredit('TransferCreditSchool', 'TransferCreditCourseId', 'TransferCreditGradeLetter')">Add Transfer Credit</button>
+        </td>
+    </tr>
+</table>

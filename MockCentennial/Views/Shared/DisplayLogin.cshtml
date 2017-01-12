@@ -1,0 +1,83 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en" style="height: 100%;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,initial-scale=1.0">
+    <meta name="google-translate-customization" content="188dcd4ee75364ad-8da21b90954ed747-g21d8a216c3343646-2c">
+    <title>Centennial College Login - powered by Centennial College</title>
+    <link href="@Url.Content("~/Content/myCentStyles.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/css.css")" rel="stylesheet" type="text/css">
+    <link href="@Url.Content("~/img/centFav.ico")" rel="SHORTCUT ICON" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="@Url.Content("~/Content/translateelement.css")">
+</head>
+<body style="position: relative; min-height: 100%; top: 0px;">
+    <div class="header">
+        <div class="container">
+            <a href="http://www.centennialcollege.ca/"><img class="cc-logo" src="@Url.Content("~/img/logo.svg")" alt="Centennial College logo that leads back to Centennial College homepage (centennialcollege.ca)" title="Centennial College logo that leads back to Centennial College homepage (centennialcollege.ca)"></a>
+            <div class="header-section">
+                <ul>
+                    <li><a href="https://my.centennialcollege.ca/cp/home/displaylogin#skip-navigation">Skip Navigation</a></li>
+                    <li><a href="http://www.centennialcollege.ca/admissions/financial-aid/">Financial Aid</a></li>
+                    <li><a href="https://e.centennialcollege.ca/">eCentennial</a></li>
+                    <li><a href="http://www.centennialcollege.ca/about-centennial/college-overview/college-policies/">Policies</a></li>
+                    <li><a href="http://www.centennialcollege.ca/about-centennial/contact-us/">Contact Us</a></li>
+                    <li><a href="http://www.centennialcollege.ca/">Centennial Website</a></li>
+                </ul>
+            </div>
+            <div class="mobile-head">
+                <div class="mobile-search"></div>
+                <div class="mobile-burger"></div>
+            </div>
+            <div class="top-nav">
+                <a href="https://my.centennialcollege.ca/"><img class="mc-logo" src="@Url.Content("~/img/mc-logo.png")" alt="myCentennial logo"></a>
+                <div style="float: right">
+                    <div id="fontresizer">
+                        <a href="https://my.centennialcollege.ca/cp/home/displaylogin#" id="font1" title="Text size smaller">Text size smaller</a>
+                        <a href="https://my.centennialcollege.ca/cp/home/displaylogin#" id="font2" title="Text size medium">Text size medium</a>
+                        <a href="https://my.centennialcollege.ca/cp/home/displaylogin#" id="font3" title="Text size larger">Text size larger</a>
+                    </div>
+                    <div id="google_translate_element"><div class="skiptranslate goog-te-gadget" dir="ltr"><div id=":0.targetLanguage" class="goog-te-gadget-simple" style="white-space: nowrap;"><img src="@Url.Content("~/img/cleardot.gif")" class="goog-te-gadget-icon" alt="" style="background-image: url(&quot;https://translate.googleapis.com/translate_static/img/te_ctrl3.gif&quot;); background-position: -65px 0px;"><span style="vertical-align: middle;"><a role="menu" class="goog-te-menu-value" href=""><span>Select Language</span><img src="@Url.Content("~/img/cleardot.gif")" alt="" width="1" height="1"><span style="border-left: 1px solid rgb(187, 187, 187);">​</span><img src="@Url.Content("~/img/cleardot.gif")" alt="" width="1" height="1"><span style="color: rgb(155, 155, 155);">▼</span></a></span></div></div></div>
+                    
+                    <form action="https://www.centennialcollege.ca/mycentennial/search.aspx">
+                        <div class="searchContainer">
+                            <input type="text" title="search mycentennial" name="q" value="Search" id="txtSearch">
+                            <input type="submit" title="submit" name="submit" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+</div><!-- .header -->
+    
+    <div class="mobile-grey"></div>
+    <span id="skip-navigation"></span>
+    <div class="log-in-bar">
+        <div class="container">
+            <span>Login to <br>myCentennial</span>
+            <img src="@Url.Content("~/img/login-arrow.png")" alt="">
+            <div class="log-in-form">
+                @using (Html.BeginForm("Login", "Account"))
+                {
+                    <input type="text" placeholder="User ID" name="UserNum" tabindex="1"/>
+                    <input type="password" placeholder="Password" name="UserPassword" tabindex="2"/>
+                    <input type="submit" value="Log In" />
+                }
+                <p><a href="">Forgot your user ID</a> or <a id="recover" href="">forgot your password?</a></p>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div><!-- .log-in-bar -->
+
+</body>
+</html>
+
+
+
+

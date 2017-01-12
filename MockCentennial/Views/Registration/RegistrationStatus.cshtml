@@ -1,0 +1,132 @@
+﻿@model MockCentennial.Models.Registration
+
+@{
+    ViewBag.Title = "Registration Status";
+}
+
+@if (!Model.StudentHasHolds && Model.StudentAcademicStanding)
+{
+    <div class="floatRight">
+        <button type="button" onclick="location.href='/Registration/ReAdmit'">Register for Re-Admission</button>
+        <button type="button" onclick="location.href='/Registration/ProgramTransfer'">Transfer to Another Program</button>
+    </div>
+}
+
+<div>
+    @Model.StudentNum @Model.StudentFirstMidName @Model.StudentLastName
+</div>
+<div>
+    @Model.TermName
+</div>
+
+<div>
+    <p><b>ACADEMIC STANDING</b></p>
+    
+    @if (Model.StudentHasHolds)
+    {
+        <p>You have Holds.</p>
+    }
+    else
+    {
+        <p>You have no Holds which prevent registration.</p>
+    }
+    @if (Model.StudentAcademicStanding)
+    {
+        <p>Your Combined Academic Standing is Good Academic Standing which permits registration.</p>
+    }
+    else
+    {
+        <p>NOT in good academic standing.</p>
+    }
+    @if (Model.StudentCanRegister)
+    {
+        <p>Your Student Status permits registration.</p>
+    }
+    else
+    {
+        <p>Your Student Status prohibits registration.</p>
+    }
+
+    <p>
+        Your Class for registration purposes is @(Model.ProgramSemesterName).
+    </p>
+
+</div>
+
+<br/>
+<div>
+    <table class="datadisplaytable" summary="This table contains information about
+Level and Credit earned to date.">
+        <caption class="captiontext">Earned Credit</caption>
+        <tbody>
+            <tr>
+                <th class="ddheader" scope="col">Level</th>
+                <th class="ddheader" scope="col">Type</th>
+                <th class="ddheader" scope="col">Hours</th>
+            </tr>
+            <tr>
+                <td class="dddefault">@Model.DegreeLevel</td>
+                <td class="dddefault">Transfer</td>
+                <td class="dddefault"><p class="rightaligntext">@Model.TransferCredit</p></td>
+            </tr>
+            <tr>
+                <td class="dddefault">@Model.DegreeLevel</td>
+                <td class="dddefault">Institutional</td>
+                <td class="dddefault"><p class="rightaligntext">@Model.InstitutionalCredit</p></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div>
+    <table class="datadisplaytable" summary="This table contains Curriculum Information.">
+        <caption class="captiontext">Curriculum Information</caption>
+        <tbody>
+            <tr>
+                <th colspan="2" class="ddlabel" scope="row">Current Program</th>
+            </tr>
+            <tr>
+                <td colspan="2" class="dddefault">@Model.DegreeName</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">Level:</th>
+                <td colspan="1" class="dddefault">@Model.DegreeLevel</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">Program:</th>
+                <td colspan="1" class="dddefault">@Model.ProgramName</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">Admit Term:</th>
+                <td colspan="1" class="dddefault">@($"{Model.StudentStartDate:Y}")</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">Admit Type:</th>
+                <td colspan="1" class="dddefault">OCAS Module</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">Catalog Term:</th>
+                <td colspan="1" class="dddefault">@($"{Model.StudentStartDate:Y}")</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">College:</th>
+                <td colspan="1" class="dddefault">@Model.DepartmentName</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">Campus:</th>
+                <td colspan="1" class="dddefault">@Model.CampusName</td>
+            </tr>
+            <tr>
+                <th colspan="1" class="ddlabel" scope="row">Major:</th>
+                <td colspan="1" class="dddefault">@Model.ProgramName</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+
+

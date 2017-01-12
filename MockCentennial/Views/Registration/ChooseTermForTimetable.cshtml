@@ -1,0 +1,15 @@
+﻿@model MockCentennial.Models.EnrollmentModel.TermPicker
+
+@{
+    ViewBag.Title = "Registration Term";
+}
+
+@using (Html.BeginForm("BuildTimetable", "Registration", FormMethod.Get))
+{
+    <div><strong>Select a Term:</strong>
+        @Html.DropDownListFor(m => m.TermId, new SelectList(Model.TermOptions, "TermId", "TermName"))
+    </div>
+    <div><button type="submit">Proceed to Build Timetable</button></div>
+}
+
+

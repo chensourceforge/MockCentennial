@@ -1,0 +1,127 @@
+﻿@model MockCentennial.Models.SchoolModel.Grading
+@{
+    ViewBag.Title = "Update Student Grades";
+}
+
+<table>
+    <tr>
+        <th>Term</th>
+        <th>Course</th>
+        <th>Section</th>
+    </tr>
+    <tr>
+        <td>@Html.DropDownListFor(m => m.TermId, new SelectList(Model.TermOptions, "TermId", "TermName"), "-------", new { id="TermId", onchange = "changeTerm()" })</td>
+        <td>@Html.DropDownListFor(m => m.TermCourseId, new SelectList(Model.TermCourseOptions, "TermCourseId", "CourseHeading"), "-------", new { id = "TermCourseId", onchange = "changeTermCourse()" })</td>
+        <td>@Html.DropDownListFor(m => m.SectionId, new SelectList(Model.SectionOptions, "SectionId", "SectionNum"), "-------", new { id = "SectionId", onchange = "changeSection()" })</td>
+    </tr>
+</table>
+
+<div id="editGrades"></div>
+
+<script>
+    function changeTerm() {
+        resetEditGrades();
+        var termId = parseInt($('#TermId').val());
+        if (isNaN(termId)) {
+            resetTermCourse();
+            resetSection();
+            return;
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/UpdateStudentGrades',
+            data: {
+                TermId: termId
+            }
+        }).done(function (res) {
+            var output = '<option>-------</option>';
+            for (var i = 0; i < res.length; i++) {
+                output += '<option value="' + res[i].TermCourseId + '">' + res[i].CourseHeading + '</option>';
+            }
+            $('#TermCourseId').html(output);
+
+            resetSection();
+        });
+    }
+
+    function changeTermCourse() {
+        resetEditGrades();
+        var termId = parseInt($('#TermId').val());
+        var termCourseId = parseInt($('#TermCourseId').val());
+        if (isNaN(termCourseId)) {
+            resetSection();
+            return;
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/UpdateStudentGrades',
+            data: {
+                TermId: termId,
+                TermCourseId: termCourseId
+            }
+        }).done(function (res) {
+            var output = '<option>-------</option>';
+            for (var i = 0; i < res.length; i++) {
+                output += '<option value="' + res[i].SectionId + '">' + res[i].SectionNum + '</option>';
+            }
+            $('#SectionId').html(output);
+        });
+    }
+
+    function changeSection() {
+        resetEditGrades();
+        var termId = parseInt($('#TermId').val());
+        var termCourseId = parseInt($('#TermCourseId').val());
+        var sectionId = parseInt($('#SectionId').val());
+        if (isNaN(sectionId)) {
+            return;
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/UpdateStudentGrades',
+            data: {
+                TermId: termId,
+                TermCourseId: termCourseId,
+                SectionId: sectionId
+            }
+        }).done(function (res) {
+            $('#editGrades').html(res);
+        });
+    }
+
+    function updateGrade(enrollmentId, studentId) {
+        var elemGrade = $('#e_' + enrollmentId);
+        var termCourseId = $('#TermCourseId').val();
+        elemGrade.removeClass('greenBackground redBackground');
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/UpdateGrade',
+            data: {
+                StudentId: studentId,
+                TermCourseId: termCourseId,
+                EnrollmentId: enrollmentId,
+                GradeNumeric: elemGrade.val()
+            }
+        }).done(function (res) {
+            if (res.success) {
+                elemGrade.addClass('greenBackground');
+            } else {
+                elemGrade.addClass('redBackground');
+            }
+        });
+    }
+
+    function resetTermCourse() {
+        var output = '<option>-------</option>';
+        $('#TermCourseId').html(output);
+    }
+
+    function resetSection() {
+        var output = '<option>-------</option>';
+        $('#SectionId').html(output);
+    }
+
+    function resetEditGrades() {
+        $('#editGrades').html('');
+    }
+</script>

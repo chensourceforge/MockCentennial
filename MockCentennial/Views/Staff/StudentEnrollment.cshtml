@@ -1,0 +1,75 @@
+﻿@using MockCentennial.Models
+@using MockCentennial.Models.SchoolModel
+
+@{
+    Layout = null;
+    int phase = ViewBag.phase;
+}
+
+@switch (phase)
+{
+    case 1:
+        List<TermOption> termOptions = ViewBag.termOptions;
+
+        <strong>Select a Term:</strong>
+        <select id="EnrollmentTerm" onchange="getEnrollmentDetails('EnrollmentTerm', 'Enrollment')">
+            <option>--------</option>
+            @foreach (var t in termOptions)
+            {
+                <option value="@t.TermId">@t.TermName</option>
+            }
+        </select>
+
+        break;
+    case 2:
+        List<EnrollmentSelection> enrollmentSelections = ViewBag.enrollmentSelections;
+        List<TermCourseOption> termCourseOptions = ViewBag.termCourseOptions;
+        int termId = ViewBag.termId;
+
+        <table border="1">
+            <tr>
+                <th>Course</th>
+                <th>Section</th>
+                <th></th>
+                <th></th>
+            </tr>
+            @foreach (var e in enrollmentSelections)
+            {
+                <tr id="EnrollmentRow_@e.EnrollmentId">
+                    <td>@e.CourseCode</td>
+                    <td>
+                        <select id="EnrollmentId_@e.EnrollmentId">
+                            @foreach (var s in e.Sections)
+                        {
+                            if (s.SectionId == e.SectionId)
+                            {
+                                    <option value="@s.SectionId" selected="selected">@s.SectionNum</option>
+                                }
+                                else
+                                {
+                                    <option value="@s.SectionId">@s.SectionNum</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                    <td><button type="button" onclick="updateEnrollmentSection(@e.EnrollmentId,'EnrollmentId_@e.EnrollmentId')">Change Student Section</button></td>
+                    <td><button type="button" onclick="dropEnrollment(@e.EnrollmentId,'EnrollmentRow_@e.EnrollmentId')">Drop Student From Course</button></td>
+                </tr>
+            }
+        </table>
+
+        <div style="border: 1px gray solid; margin: 10px 10px 10px 10px; padding: 10px 10px 10px 10px;">
+            <div>
+                @Html.DropDownList("TermCourseId", new SelectList(termCourseOptions, "TermCourseId", "CourseHeading"), new { id = "TermCourseId" })
+                <button type="button" onclick="getSectionsForTermCourse('TermCourseId', 'EnrollmentNewCourseSectionContainer', 'EnrollmentNewCourseSectionElem')">Enroll Student in New Course</button>
+            </div>
+            <div id="EnrollmentNewCourseSectionContainer" style="display: none">
+                <strong>Select Section</strong>
+                <select id="EnrollmentNewCourseSectionElem"></select>
+                <button type="button" onclick="addEnrollment('EnrollmentNewCourseSectionElem', @termId, 'Enrollment')">Submit</button>
+            </div>
+        </div>
+
+        break;
+}
+

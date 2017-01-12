@@ -1,0 +1,46 @@
+﻿@model MockCentennial.Models.SchoolModel.SectionDetails
+
+@{
+    Layout = null;
+    int termCourseId = Model.TermCourseId;
+}
+
+@foreach (var sectionInfo in Model.SectionInfos)
+{
+    int sectionId = sectionInfo.SectionId;
+    <table id="sec_@sectionId" border="1">
+        <tr>
+            <td><button type="button" onclick="deleteSection(@termCourseId,@sectionId)">x</button> Section @Html.TextBoxFor(m => sectionInfo.SectionNum,new {id=$"sectionNum_{sectionId}"}) @Html.HiddenFor(m => sectionInfo.SectionId)</td>
+            <td>
+                <table>
+                    <tr>
+                        <th>Is Lecture</th>
+                        <th>Instructor</th>
+                        <th>Room</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th><button type="button" onclick="createNewClass(@termCourseId, @sectionId)">New class</button></th>
+                    </tr>
+                    @foreach (var classInfo in sectionInfo.ClassInfos)
+                    {
+                        int classId = classInfo.ClassId;
+                        <tr>
+                            <td>@Html.CheckBoxFor(m => classInfo.ClassIsLecture,new {id=$"classIsLecture_{classId}"}) @Html.HiddenFor(m => classInfo.ClassId)</td>
+                            <td>@Html.DropDownListFor(m => classInfo.InstructorId, new SelectList(Model.InstructorOptions, "InstructorId", "InstructorName", classInfo.InstructorId),new {id=$"instructorId_{classId}"})</td>
+                            <td>@Html.DropDownListFor(m => classInfo.RoomId, new SelectList(Model.RoomOptions, "RoomId", "RoomLocation", classInfo.RoomId), new { id = $"roomId_{classId}" })</td>
+                            <td>@Html.DropDownListFor(m => classInfo.ClassStartTime, new SelectList(Model.TimeOptions, "TimeId", "TimeText", classInfo.ClassStartTime), new { id = $"classStartTime_{classId}" })</td>
+                            <td>@Html.DropDownListFor(m => classInfo.ClassEndTime, new SelectList(Model.TimeOptions, "TimeId", "TimeText", classInfo.ClassEndTime), new { id = $"classEndTime_{classId}" })</td>
+                            <td>
+                                <button type="button" onclick="saveClassDetails(@termCourseId, @sectionId, @classId)">Save</button>
+                                <button type="button" onclick="deleteClass(@termCourseId, @classId)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+            </td>
+        </tr>
+    </table>
+}
+<div><button type="button" onclick="createNewSection(@termCourseId)">New section</button></div>
+

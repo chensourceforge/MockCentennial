@@ -1,0 +1,116 @@
+﻿@model MockCentennial.Models.SchoolModel.SectionOffering
+@{
+    ViewBag.Title = "Edit Sections";
+}
+
+
+<div>
+    @using (Html.BeginForm("EditSections", "Staff", FormMethod.Post))
+    {
+        List<SelectListItem> termList = new List<SelectListItem>();
+        foreach (var o in Model.TermOptions)
+        {
+            termList.Add(new SelectListItem
+            {
+                Value = o.TermId.ToString(),
+                Text = o.TermName
+            });
+        }
+        @Html.DropDownListFor(model=>model.TermId, termList, "--------")
+        <button type="submit">Load Courses</button>
+    }
+</div>
+<div>
+    @if (Model.TermCourseOptions != null)
+    {
+        foreach (var o in Model.TermCourseOptions)
+        {
+            int termCourseId = o.TermCourseId;
+            <div>
+                <div>
+                    <h3>@o.CourseHeading</h3>
+                    <button type="button" onclick="getSectionDetails(@termCourseId)">Show sections</button>
+                </div>
+            </div>
+            <div id='@($"tc_{termCourseId}")'></div>
+            <hr/>
+        }
+    }
+</div>
+
+<script>
+    function getSectionDetails(termCourseId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/EditSectionDetails',
+            data: {TermCourseId:termCourseId}
+        }).done(function(res) {
+            $('#tc_' + termCourseId).html(res);
+        });
+    }
+
+    function createNewSection(termCourseId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/CreateNewSection',
+            data: {TermCourseId:termCourseId}
+        }).done(function(res) {
+            $('#tc_' + termCourseId).html(res);
+        });
+    }
+
+    function createNewClass(termCourseId, sectionId) {
+        $.ajax({
+            type: 'GET',
+            url: '/Staff/CreateNewClass',
+            data: {TermCourseId:termCourseId,SectionId:sectionId}
+        }).done(function(res) {
+            $('#tc_' + termCourseId).html(res);
+        });
+    }
+
+    function saveClassDetails(termCourseId, sectionId, classId) {
+        var idTermCourseSection = '#tc_' + termCourseId + ' #sec_' + sectionId;
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/SaveClassDetails',
+            data: {
+                TermCourseId: termCourseId,
+                SectionId: sectionId,
+                ClassId: classId,
+                SectionNum:     $(idTermCourseSection + ' #sectionNum_'+sectionId).val(),
+                ClassIsLecture: $(idTermCourseSection + ' #classIsLecture_'+classId).prop('checked'),
+                InstructorId:   $(idTermCourseSection + ' #instructorId_'+classId).val(),
+                RoomId:         $(idTermCourseSection + ' #roomId_'+classId).val(),
+                ClassStartTime: $(idTermCourseSection + ' #classStartTime_'+classId).val(),
+                ClassEndTime:   $(idTermCourseSection + ' #classEndTime_'+classId).val()
+            }
+        }).done(function(res) {
+            $('#tc_' + termCourseId).html(res);
+        });
+    }
+
+    function deleteClass(termCourseId, classId) {
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/DeleteClass',
+            data: { TermCourseId: termCourseId, ClassId: classId }
+        }).done(function(res) {
+            $('#tc_' + termCourseId).html(res);
+        });
+    }
+
+    function deleteSection(termCourseId, sectionId) {
+        var isSure =
+            confirm('Are you sure you want to DELETE\n the section,\n all of its related classes,\n and student enrollments?');
+        if(!isSure){ return; }
+        $.ajax({
+            type: 'POST',
+            url: '/Staff/DeleteSection',
+            data: { TermCourseId: termCourseId, SectionId: sectionId }
+        }).done(function (res) {
+            $('#tc_' + termCourseId).html(res);
+        });
+    }
+</script>
+

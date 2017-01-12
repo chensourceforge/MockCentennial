@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    
+    @Scripts.Render("~/bundles/jquery")
+    
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/staffTemplate.css")">
+    @RenderSection("Styles", false)
+
+</head>
+<body>
+<div class="navSideBar">
+    <div><a href="/Account/Logout">Logout</a></div>
+    <div>
+        @using (Html.BeginForm("FindStudent", "Staff", FormMethod.Get))
+        {
+            @Html.TextBox("StudentNum")
+            <button type="submit">Find Student</button>
+        }
+    </div>
+    <div>
+        @using (Html.BeginForm("ListCourses", "Staff", FormMethod.Get))
+        {
+            <button type="submit">List Courses</button>
+        }
+    </div>
+
+    <div>
+        @using (Html.BeginForm("EditCourseOfferings", "Staff", FormMethod.Get))
+        {
+            <button type="submit">Change Course Offering</button>
+        }
+    </div>
+
+    <div>
+        @using (Html.BeginForm("EditSections", "Staff", FormMethod.Get))
+        {
+            <button type="submit">Change Section Offering</button>
+        }
+    </div>
+    
+    <div>
+        @using (Html.BeginForm("UpdateStudentGrades", "Staff", FormMethod.Get))
+        {
+            <button type="submit">Update Grades</button>
+        }
+    </div>
+</div>
+
+<div class="mainBody">
+    @RenderBody()
+</div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+﻿@using Newtonsoft.Json
+@model IEnumerable<MockCentennial.Models.TimetableModel.TimetableEntry>
+@{
+    ViewBag.Title = "View Timetable";
+}
+
+<div id="timetable" style="position: relative; width: 1000px;height: 1000px;"></div>
+
+<script>
+    var timetableArray = [];
+    var timetableContainer;
+    var heading_width = 70,
+        heading_height = 50,
+        heading_top = 20,
+        heading_left = 20,
+        cell_width = 150,
+        cell_height = 30,
+        cells_top = heading_top + heading_height,
+        cells_left = heading_left + heading_width;
+
+    $(document).ready(renderTimetable);
+
+    function renderTimetable(jQuery) {
+        timetableContainer = document.getElementById("timetable");
+        createHeading();
+        createTimetableArray();
+        createTimetableCells();
+    }
+
+    function addColor(classObj, arrayObj) {
+        arrayObj.classes.push(classObj.classId);
+
+        var color = arrayObj.color;
+        var cell = arrayObj.block;
+        if (cell) {
+            // add to existing
+            color -= 32;
+        } else {
+            // create new
+            color = 223;
+
+            cell = document.createElement("div");
+            cell.style.position = 'absolute';
+            cell.style.left = arrayObj.left + 'px';
+            cell.style.top = arrayObj.top + 'px';
+            cell.style.width = cell_width + 'px';
+            cell.style.height = cell_height + 'px';
+            timetableContainer.appendChild(cell);
+            arrayObj.block = cell;
+        }
+        cell.style.backgroundColor = 'rgb(' + color + ',' + color + ',' + color + ')';
+        arrayObj.color = color;
+    }
+
+    function addText(classObj, arrayObj) {
+        var txt = arrayObj.text;
+        if (!txt) {
+            txt = document.createElement("div");
+            txt.style.position = 'absolute';
+            txt.style.left = arrayObj.left + 'px';
+            txt.style.top = arrayObj.top + 'px';
+            txt.style.fontSize = '0.85em';
+            txt.style.zIndex = '9';
+            txt.style.width = cell_width + 'px';
+            txt.style.textAlign = 'center';
+            timetableContainer.appendChild(txt);
+            arrayObj.text = txt;
+        }
+        var minuteDisplay = classObj.startMinute;
+        minuteDisplay = minuteDisplay < 10 ? '0' + minuteDisplay : '' + minuteDisplay;
+        txt.innerHTML += '<p><a href="#' + classObj.courseId + '">' +
+            classObj.courseCode + '-' + classObj.section + '</a><br/>' +
+            classObj.room + '<br/>' + (classObj.isLecture ? 'Lecture' : 'Lab') + '<br/>' +
+            classObj.startHour + ':' + minuteDisplay + '-' +
+            classObj.endHour + ':' + classObj.endMinute + '</p>';
+    }
+
+    function createTimetableCells() {
+        var timetableClasses = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model))');
+        for (var i = 0; i < timetableClasses.length; i++) {
+            var classObj = timetableClasses[i];
+            var sDay = classObj.startDay;
+            var sHour = classObj.startHour;
+            var sMinute = classObj.startMinute;
+            var eDay = classObj.endDay;
+            var eHour = classObj.endHour;
+            var eMinute = classObj.endMinute;
+            var started = false;
+            for (var j = 0; j < timetableArray.length; j++) {
+                var arrayObj = timetableArray[j];
+                if (started) {
+                    if (arrayObj.day === eDay &&
+                        arrayObj.hour === eHour &&
+                        arrayObj.minute === eMinute) {
+                        break;
+                    } else {
+                        addColor(classObj, arrayObj);
+                    }
+                } else {
+                    if (arrayObj.day === sDay &&
+                        arrayObj.hour === sHour &&
+                        arrayObj.minute === sMinute) {
+                        
+                        addColor(classObj, arrayObj);
+                        addText(classObj, arrayObj);
+                        started = true;
+                    }
+                }
+            }
+        }
+    }
+
+    function createHeading() {
+        var times = ['8AM', '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM',
+            '4PM', '5PM', '6PM', '7PM', '8PM', '9PM', '10PM', '11PM'];
+        var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        var top = cells_top, left = heading_left, i, txt;
+        for (i = 0; i < times.length; i++) {
+            txt = document.createElement("div");
+            txt.style.position = 'absolute';
+            txt.style.left = left + 'px';
+            txt.style.top = top + 'px';
+            txt.innerHTML = '<strong>' + times[i] + '</strong>';
+            timetableContainer.appendChild(txt);
+            top += cell_height + cell_height;
+        }
+
+        var borderHeight = top - cell_height - cell_height;
+
+        top = heading_top; left = cells_left;
+        for (i = 0; i < days.length; i++) {
+            txt = document.createElement("div");
+            txt.style.position = 'absolute';
+            txt.style.left = left + 'px';
+            txt.style.top = top + 'px';
+            txt.style.width = cell_width + 'px';
+            txt.style.textAlign = 'center';
+            txt.innerHTML = '<strong>' + days[i] + '</strong>';
+            timetableContainer.appendChild(txt);
+
+            txt.style.height = borderHeight + 'px';
+            txt.style.borderLeft = '1px solid gray';
+
+            left += cell_width;
+        }
+    }
+
+    function createTimetableArray() {
+        var top = cells_top, left = cells_left;
+        for (var d = 1; d <= 6; d++) {
+            for (var h = 8; h < 23; h++) {
+                for (var m = 0; m < 60; m += 30) {
+                    timetableArray.push({
+                        day: d,
+                        hour: h,
+                        minute: m,
+                        top: top,
+                        left: left,
+                        classes: []
+                    });
+                    top += cell_height;
+                }
+            }
+            top = cells_top;
+            left += cell_width;
+        }
+    }
+</script>

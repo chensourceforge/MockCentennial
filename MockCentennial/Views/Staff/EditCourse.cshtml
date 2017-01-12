@@ -1,0 +1,100 @@
+﻿@using MockCentennial.Models.SchoolModel
+@model MockCentennial.Models.SchoolModel.CourseInfo
+@{
+    ViewBag.Title = "Edit Course";
+}
+
+@section Styles {
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/multi-select.css")">
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/editCourse.css")">
+}
+
+<div>
+    @using (Html.BeginForm("EditCourse", "Staff", FormMethod.Post))
+    {
+        List<SelectListItem> courseLevels=new List<SelectListItem>();
+        courseLevels.Add(new SelectListItem { Value = "SS", Text = "SS" });
+        courseLevels.Add(new SelectListItem { Value = "PS", Text = "PS" });
+        courseLevels.Add(new SelectListItem { Value = "PG", Text = "PG" });
+
+        <div>@Html.HiddenFor(model => model.CourseId)</div>
+        <table>
+            <tr>
+                <td>Course Subject</td>
+                <td>@Html.TextBoxFor(model=>model.CourseSubject)</td>
+            </tr>
+            <tr>
+                <td>Course Number</td>
+                <td>@Html.TextBoxFor(model => model.CourseNum)</td>
+            </tr>
+            <tr>
+                <td>Course Title</td>
+                <td>@Html.TextBoxFor(model => model.CourseTitle)</td>
+            </tr>
+            <tr>
+                <td>Course Level</td>
+                <td>@Html.DropDownListFor(model=>model.CourseLevel,courseLevels)</td>
+            </tr>
+            <tr>
+                <td>Course Credits</td>
+                <td>@Html.TextBoxFor(model => model.CourseCredits)</td>
+            </tr>
+            <tr>
+                <td>Prereqs</td>
+                <td>@Html.ListBoxFor(model => model.PrereqIds, new MultiSelectList(Model.CourseOptions, "CourseId", "CourseCode"))</td>
+            </tr>
+        </table>
+        <div>
+            <button type="submit">Save Changes</button>
+        </div>
+    }
+</div>
+
+<script src='@Url.Content("~/Scripts/jquery.quicksearch.js")'></script>
+<script src='@Url.Content("~/Scripts/jquery.multi-select.js")'></script>
+<script>
+    $(document).ready(function() {
+        $('select#PrereqIds').multiSelect({
+            selectableFooter: '<button type="button" onclick="moveAll(true); return false;">Select all</button>',
+            selectionFooter: '<button type="button" onclick="moveAll(false); return false;">Deselect all</button>',
+            selectableHeader: '<input type="text" class="search-input" autocomplete="off" placeholder="Search">',
+            selectionHeader: '<input type="text" class="search-input" autocomplete="off" placeholder="Search">',
+            afterInit: function (ms) {
+                var that = this,
+                    $selectableSearch = that.$selectableUl.prev(),
+                    $selectionSearch = that.$selectionUl.prev(),
+                    selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                    selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                .on('keydown', function (e) {
+                    if (e.which === 40) {
+                        that.$selectableUl.focus();
+                        return false;
+                    }
+                });
+
+                that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                .on('keydown', function (e) {
+                    if (e.which == 40) {
+                        that.$selectionUl.focus();
+                        return false;
+                    }
+                });
+            },
+            afterSelect: function () {
+                this.qs1.cache();
+                this.qs2.cache();
+            },
+            afterDeselect: function () {
+                this.qs1.cache();
+                this.qs2.cache();
+            }
+        });
+    });
+    function moveAll(selectAll) {
+        if (selectAll) { $('select#PrereqIds').multiSelect('select_all'); }
+        else { $('select#PrereqIds').multiSelect('deselect_all'); }
+    }
+</script>
+

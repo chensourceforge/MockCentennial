@@ -1,0 +1,52 @@
+<!--
+/* Custom css style sheet for schools to add thier own styles or override styles in default css */
+/* These styles have corresponding styles that finish out the desired look and feel in 
+   /misc/style.css but need to be in this file because of the dependency on the theme 
+   that the images reside in.
+   When creating a new theme, change the path to reflect the new theme.  In most cases, only 
+   the directory immediately following the "custom" directory (classic, in the styles below) 
+   will need to be changed.
+ */
+
+input.btn {
+  background-image: url(/custom/classic/images/misc/btnbg.gif);
+}
+
+input.btnvert {
+  background-image: url(/custom/classic/images/misc/btnbg.gif);
+}
+
+input.btnsm {
+  background-image: url(/custom/classic/images/misc/btnbg.gif);
+}
+
+input.btndisabled {
+  background-image: url(/custom/classic/images/misc/btnbg.gif);
+}
+
+input.btnsmdisabled {
+  background-image: url(/custom/classic/images/misc/btnbg.gif);
+}
+
+td.tabon { 
+  background-image:url(/img/tab_corner.gif); 
+}
+
+td.taboff { 
+  background-image:url(/img/tab_corner.gif); 
+}
+
+div.tabon {
+  background-image:url(/img/tab_corner_right.gif); 
+}
+
+div.taboff { 
+  background-image:url(/img/tab_corner_right.gif); 
+}
+
+.bgmenu {
+  background-image:url(/custom/classic/images/misc/menu_bg.gif);
+}
+
+/* End theme dependent styles */
+-->

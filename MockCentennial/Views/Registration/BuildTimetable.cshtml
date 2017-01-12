@@ -1,0 +1,152 @@
+﻿@using MockCentennial.Models.TimetableModel
+@model MockCentennial.Models.TimetableModel.TimetableBuilder
+@{
+    ViewBag.Title = "Build Timetable";
+}
+
+
+@helper DisplayCourse(CourseDisplay course, int courseCount)
+{
+    <tr>
+        <td>
+            @if (course.CourseIsCompleted)
+            {
+                <strong style="color: red;">MET</strong>
+            }
+            else if (course.CourseIsOffered)
+            {
+                <button type="button" onclick="toggleCourseContents('cc_@courseCount',this)">+</button>
+            }
+        </td>
+        <td>
+            <table>
+                <tr id="@(course.CourseCode)">
+                    <td>@($"{course.CourseCode} - {course.CourseTitle}")</td>
+                    <td>@($"{course.CourseCredits}h")</td>
+                    <td>@(course.IsAcademic ? "Academic" : "Practicum")</td>
+                    <td>
+                        @foreach (var p in course.Prereqs)
+                        {
+                            <a class="redBackground" href="#@(p.CourseCode)">@p.CourseCode</a>
+                        }
+                    </td>
+                </tr>
+            </table>
+            <table id='cc_@courseCount' style="display: none;">
+                @foreach (var section in course.Sections)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="@(course.CourseId)" value="@(section.SectionId)"
+                                   onchange="sectionSelectionChanged('@(course.CourseId)', this)"
+                                   @if (section.SectionIsSelected) { <text> checked="checked" </text> } />
+                        </td>
+                        <td>@($"Section {section.SectionNum}")</td>
+                        <td>
+                            <table>
+                                <tr><th>Class</th><th>Time</th><th>Instructor</th><th>Room</th><th>Campus</th></tr>
+                                @foreach (var c in section.Classes)
+                                {
+                                    <tr>
+                                        <td>@(c.IsLecture ? "Lecture" : "Lab")</td>
+                                        <td>@(c.MeetingTime)</td>
+                                        <td>@(c.Instructor)</td>
+                                        <td>@(c.Room)</td>
+                                        <td>@(c.Campus)</td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </td>
+    </tr>
+}
+
+@using (Html.BeginForm("BuildTimetable", "Registration", FormMethod.Post))
+{
+    int courseCount = 0, electiveCount = 0;
+    <table border="1">
+        @foreach (var term in Model.Terms)
+        {
+            <tr>
+                <td><h4>@term.ProgramSemesterName</h4></td>
+                <td>
+                    <table>
+                        @foreach (var mandatory in term.Courses)
+                        {
+                            courseCount++;
+                            @DisplayCourse(mandatory, courseCount)
+                        }
+                        @foreach (var elective in term.Electives)
+                        {
+                            electiveCount++;
+                            <tr>
+                                <td><button type="button" onclick="toggleCourseContents('ec_@electiveCount',this)">+</button></td>
+                                <td>
+                                    <div>@(elective.IsTechnicalElective ? "PRO ELECT" : "GEN ELECT")</div>
+                                    <table id="ec_@electiveCount" style="display: none;">
+                                        @foreach (var course in elective.Courses)
+                                        {
+                                            courseCount++;
+                                            @DisplayCourse(course, courseCount)
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <input type="hidden" name="choices" id="choices" />
+    <input type="hidden" name="termId" value="@Model.TermId"/>
+
+    <div>
+        <button type="submit" onclick="doPreSubmitWork()">Submit My Selections</button>
+    </div>
+}
+
+
+<script>
+    function getEnrollmentOptions() {
+        var str = '@Html.Raw(ViewBag.JSONString)';
+        var json = JSON.parse(str);
+    }
+
+    function sectionSelectionChanged(courseId, elem) {
+        if (elem.checked) {
+            //uncheck all other with name
+            var all = document.getElementsByName(courseId);
+            for (var i = all.length - 1; i >= 0; i--) {
+                if (all[i] != elem) {
+                    all[i].checked = false;
+                }
+            }
+        }
+    }
+
+    function doPreSubmitWork() {
+        var choicesDict = {};
+        var choicesArray = $('form input[type=checkbox]').serializeArray();
+        $.each(choicesArray, function (i, choice) {
+            choicesDict[choice.name] = choice.value;
+        });
+        $('#choices').val(JSON.stringify(choicesDict));
+    }
+
+    function toggleCourseContents(contentId, btn) {
+        $('#' + contentId).toggle();
+        if ($(btn).html() == '+') {
+            $(btn).html('-');
+        } else {
+            $(btn).html('+');
+        }
+    }
+</script>
+
+
+

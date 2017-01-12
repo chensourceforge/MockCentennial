@@ -1,0 +1,12 @@
+﻿@using Newtonsoft.Json
+@model MockCentennial.Models.TranscriptModel.Transcript
+@{
+    Layout = null;
+}
+<div>
+    <textarea rows="20" cols="90" id="transcriptText">@Html.Raw(JsonConvert.SerializeObject(Model, Formatting.Indented))</textarea>
+</div>
+<div>
+    <button type="button" onclick="updateTranscript('transcriptText')">Update transcript</button>
+</div>
+

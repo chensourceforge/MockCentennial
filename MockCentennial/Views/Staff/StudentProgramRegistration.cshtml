@@ -1,0 +1,68 @@
+﻿@using MockCentennial.Models
+@using MockCentennial.Models.SchoolModel
+
+@{
+    Layout = null;
+    int studentId = ViewBag.studentId;
+}
+
+@if (!ViewBag.hasProgram)
+{
+    <div>
+        Student has no current program.
+        @using (Html.BeginForm("CreateProgramRegistration", "Staff", FormMethod.Get))
+        {
+            @Html.Hidden("StudentId", studentId)
+            <button type="submit">Create Program</button>
+        }
+    </div>
+}
+else
+{
+    int studentProgramId = ViewBag.studentProgramId;
+    int currentSemester = ViewBag.currentSemester;
+    ProgramOption programOption = ViewBag.programOption;
+    List<RegistrationOption> registrationOptions = ViewBag.registrationOptions;
+
+    <div>
+        Current Program: <strong><i>(@programOption.ProgramCode) @programOption.ProgramName</i></strong>
+        @using (Html.BeginForm("EditProgramRegistration", "Staff", FormMethod.Get))
+        {
+            @Html.Hidden("StudentId", studentId)
+            @Html.Hidden("ProgramId", programOption.ProgramId)
+            <button type="submit">Transfer Program</button>
+        }
+    </div>
+    <div>
+        Current Semester:
+        <select name="CurrentSemester" id="CurrentSemester">
+            @for (int i = 1; i <= programOption.ProgramSemesters; i++)
+            {
+                if (currentSemester == i)
+                {
+                    <option value="@i" selected="selected">@i</option>
+                }
+                else
+                {
+                    <option value="@i">@i</option>
+                }
+            }
+        </select>
+        <button type="button" onclick="updateCurrentSemester(@studentProgramId, 'CurrentSemester')">Save Changes to Current Semester</button>
+    </div>
+    <div>
+        Registrations:
+        <ul>
+            @foreach (var r in registrationOptions)
+            {
+                <li>
+                    <span id="RegistrationTerm_@r.TermId">@r.TermName</span>
+                    @if (r.TermEndDate.CompareTo(DateTime.Today) > 0)
+                    {
+                        <button type="button" onclick="cancelRegistration(@studentId, @r.TermId, @r.RegistrationId, 'RegistrationTerm_@r.TermId', this)">Cancel Registration</button>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}

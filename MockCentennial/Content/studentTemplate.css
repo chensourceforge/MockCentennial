@@ -1,0 +1,15 @@
+﻿.greenBackground {
+    background: lightgreen;
+}
+.redBackground {
+    background: lightpink;
+}
+
+.floatRight {
+    float: right;
+}
+
+.floatRight button {
+    display: block;
+    padding: 10px 10px 10px 10px;
+}

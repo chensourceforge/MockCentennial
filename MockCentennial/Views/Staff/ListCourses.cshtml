@@ -1,0 +1,19 @@
+﻿@model IEnumerable<MockCentennial.Models.SchoolModel.CourseInfo>
+@{
+    ViewBag.Title = "List Courses";
+}
+
+<table border="1">
+    <tr>
+        <th>Course Code</th>
+        <th>Course Title</th>
+    </tr>
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink(c.CourseCode, "EditCourse", "Staff", new { courseId = c.CourseId }, null)</td>
+            <td>@c.CourseTitle</td>
+        </tr>
+    }
+</table>
+

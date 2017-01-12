@@ -1,0 +1,19 @@
+        #alertAdminMessageDiv{
+          position: absolute;
+          top: 50px;
+          left: 75px;
+          visibility: hidden;
+        }
+        #alertSessionExpireMessageDiv{
+          position: absolute;
+          top: 50px;
+          left: 75px;
+          visibility: hidden;
+        }
+        .alerttext12 {color: #000000; font-size: 12px;}
+        .alertwhite {background-color: #ffffff;}
+        .alertwarning {background-color: #ff0000;}
+        a.skip
+        {
+          position: absolute; left: -1000em; width: 20em; 
+        }
