@@ -62,13 +62,16 @@ namespace MockCentennial.Controllers
 
         public ActionResult CreateProgramRegistration(int StudentId)
         {
-            DateTime today = DateTime.Today;
-            DateTime fromDate = today.AddDays(-30);
-            DateTime toDate = today.AddMonths(5);
-
             ProgramRegistration model = new ProgramRegistration();
             model.StudentId = StudentId;
-            model.TermOptions = dao.GetTermOptions(fromDate, toDate);
+
+            // Uncomment for production
+            //DateTime today = DateTime.Today;
+            //DateTime fromDate = today.AddDays(-30);
+            //DateTime toDate = today.AddMonths(5);
+            //model.TermOptions = dao.GetTermOptions(fromDate, toDate);
+
+            model.TermOptions = dao.GetAllTermOptions();
             model.ProgramOptions = dao.GetProgramOptions();
 
             Session["TermOptions"] = model.TermOptions;

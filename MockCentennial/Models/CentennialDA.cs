@@ -3826,8 +3826,7 @@ namespace MockCentennial.Models
 
                         // end date registration record
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText =
-                            "update Registration set DateRegistrationCancelled=GETDATE() where RegistrationId=@RegistrationId";
+                        cmd.CommandText = "update Registration set DateRegistrationCancelled=GETDATE() where RegistrationId=@RegistrationId";
                         cmd.Parameters.Clear();
                         cmd.Parameters.Add("@RegistrationId", SqlDbType.Int).Value = RegistrationId;
                         if (cmd.ExecuteNonQuery() == 1)
