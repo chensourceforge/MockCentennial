@@ -289,8 +289,9 @@ namespace MockCentennial.Controllers
         public string ProgramTransfer(int TermId, int ProgramId)
         {
             Student student = (Student)Session["student"];
-            int toSemester = 1; // TODO
-            if (dao.TransferStudentToProgram(TermId, student.StudentId, ProgramId, toSemester))
+            int studentId = student.StudentId;
+            int toSemester = dao.GetCurrentSemesterInStudentProgram(studentId, ProgramId);
+            if (dao.TransferStudentToProgram(TermId, studentId, ProgramId, toSemester))
             {
                 return "Program transferred successfully.";
             }

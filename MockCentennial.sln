@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockCentennial", "MockCentennial\MockCentennial.csproj", "{62E6374C-5A41-41A7-B4BC-46BC010C6196}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Issue1Tests", "Issue1Tests\Issue1Tests.csproj", "{000F8159-2BEF-4E56-ADB0-DF61500DCF98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{000F8159-2BEF-4E56-ADB0-DF61500DCF98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

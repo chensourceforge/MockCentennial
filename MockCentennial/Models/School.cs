@@ -147,9 +147,17 @@ namespace MockCentennial.Models
             public List<SectionOption> Sections { get; set; }
         }
 
-        public class StudentEnrollmentDisplay
+        public class ProgramSemesterRequirement
         {
-            
+            public int ProgramSemesterNum { get; set; }
+            public List<CourseOption> MandatoryCourses { get; set; }
+            public List<CourseOption> TechnicalElectiveCourses { get; set; }
+            public List<CourseOption> GeneralElectiveCourses { get; set; }
+        }
+
+        public class ProgramRequirement
+        {
+            public List<ProgramSemesterRequirement> SemesterRequirements { get; set; }
         }
 
     }

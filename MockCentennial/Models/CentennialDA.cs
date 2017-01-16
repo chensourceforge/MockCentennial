@@ -2748,7 +2748,7 @@ namespace MockCentennial.Models
             };
             return invoice;
         }
-        private HashSet<string> GetAllCompletedCourses(Transcript transcript, string currentTerm)
+        private HashSet<string> GetAllCompletedCoursesForTimetableBuilder(Transcript transcript, string currentTerm)
         {
             HashSet<string> completedCourses = new HashSet<string>();
             foreach (History history in transcript.history)
@@ -2852,7 +2852,7 @@ namespace MockCentennial.Models
                 }
             }
 
-            HashSet<string> completedCourses = GetAllCompletedCourses(transcript, currentTerm);
+            HashSet<string> completedCourses = GetAllCompletedCoursesForTimetableBuilder(transcript, currentTerm);
             foreach (EnrollmentOption o in options)
             {
                 o.courseIsCompleted = completedCourses.Contains(o.CourseCode);
@@ -3323,7 +3323,9 @@ namespace MockCentennial.Models
                         }
                     }
 
-                    Invoice oldInvoice = JsonConvert.DeserializeObject<Invoice>((string)cmd.Parameters["@oldInvoice"].Value);
+                    Invoice oldInvoice = (cmd.Parameters["@oldInvoice"].Value is DBNull)
+                        ? null
+                        : JsonConvert.DeserializeObject<Invoice>((string) cmd.Parameters["@oldInvoice"].Value);
                     // modify invoice in memory
                     if (oldInvoice != null)
                     {
@@ -3872,6 +3874,172 @@ namespace MockCentennial.Models
             return null;
         }
 
+        /// <summary>
+        /// Gets a set of course codes of courses recorded as completed in the transcript 
+        /// </summary>
+        /// <param name="transcript"></param>
+        /// <returns></returns>
+        private HashSet<string> GetAllCompletedCoursesForDegreeAudit(Transcript transcript)
+        {
+            HashSet<string> completedCourses = new HashSet<string>();
+            foreach (History history in transcript.history)
+            {
+                foreach (Record record in history.records)
+                {
+                    foreach (Term term in record.institution.terms)
+                    {
+                        foreach (Course course in term.courses)
+                        {
+                            if ((course.gradeNumeric ?? 0) >= 50)
+                            {
+                                completedCourses.Add($"{course.subject}{course.course}");
+                            }
+                        }
+                    }
+                    foreach (School school in record.transfer.schools)
+                    {
+                        foreach (Course course in school.courses)
+                        {
+                            completedCourses.Add($"{course.subject}{course.course}");
+                        }
+                    }
+                }
+            }
+            return completedCourses;
+        }
+
+        /// <summary>
+        /// Returns ProgramRequirement object containing all the courses required by the program
+        /// </summary>
+        /// <param name="ProgramId"></param>
+        /// <returns></returns>
+        public ProgramRequirement GetProgramRequiredCourses(int ProgramId)
+        {
+            List<ProgramSemesterRequirement> semesters = new List<ProgramSemesterRequirement>();
+            string sql = new StringBuilder("select ps.ProgramSemesterNum,psc.IsMandatory,")
+                .Append("psc.IsTechnicalElective,psc.IsGeneralElective,c.CourseId,c.CourseCode,c.CourseTitle ")
+                .Append("from ProgramSemester ps join ProgramSemesterCourse psc on ")
+                .Append("ps.ProgramSemesterId=psc.ProgramSemesterId join Course c on ")
+                .Append("c.CourseId=psc.CourseId where ps.ProgramId=@ProgramId ")
+                .Append("and psc.EndDate is null order by 1,2,3").ToString();
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STR))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.Add("@ProgramId", SqlDbType.Int).Value = ProgramId;
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    int prevSemesterNum = 0, currSemesterNum;
+                    ProgramSemesterRequirement currSemesterRequirement = null;
+                    while (reader.Read())
+                    {
+                        currSemesterNum = (Int16) reader["ProgramSemesterNum"];
+                        if (currSemesterNum != prevSemesterNum)
+                        {
+                            currSemesterRequirement = new ProgramSemesterRequirement
+                            {
+                                ProgramSemesterNum = currSemesterNum,
+                                MandatoryCourses = new List<CourseOption>(),
+                                TechnicalElectiveCourses = new List<CourseOption>(),
+                                GeneralElectiveCourses = new List<CourseOption>()
+                            };
+                            semesters.Add(currSemesterRequirement);
+                            prevSemesterNum = currSemesterNum;
+                        }
+
+                        CourseOption course = new CourseOption
+                        {
+                            CourseId = (int)reader["CourseId"],
+                            CourseCode = (string)reader["CourseCode"],
+                            CourseTitle = (string)reader["CourseTitle"]
+                        };
+                        if ((bool)reader["IsMandatory"])
+                        {
+                            currSemesterRequirement.MandatoryCourses.Add(course);
+                        }
+                        else if ((bool)reader["IsTechnicalElective"])
+                        {
+                            currSemesterRequirement.TechnicalElectiveCourses.Add(course);
+                        }
+                        else if ((bool)reader["IsGeneralElective"])
+                        {
+                            currSemesterRequirement.GeneralElectiveCourses.Add(course);
+                        }
+                    }
+                }
+            }
+            return new ProgramRequirement {SemesterRequirements = semesters};
+        }
+
+        /// <summary>
+        /// Returns calculated current semester the student is supposed to be in the program.<para />
+        /// To give an example, if a program outline looks like this:
+        ///   Semester 1: A, B, C, D;
+        ///   Semester 2: E, F, G, H;
+        /// Then, a student is considered to be in:
+        ///   Semester 1 - if A, B completed (2 courses);
+        ///   Semester 1 - if A, H completed (2 courses);
+        ///   Semester 2 - if A, B, C, D completed (4 courses);
+        ///   Semester 2 - if A, B, C, D, E, F, G, H completed (8 courses)
+        /// </summary>
+        /// <param name="StudentId"></param>
+        /// <param name="ProgramId"></param>
+        /// <returns></returns>
+        public int GetCurrentSemesterInStudentProgram(int StudentId, int ProgramId)
+        {
+            Transcript transcript = GetStudentTranscript(StudentId);
+            ProgramRequirement required = GetProgramRequiredCourses(ProgramId);
+            HashSet<string> completed = GetAllCompletedCoursesForDegreeAudit(transcript);
+            int requirementsMet = 0;
+            if (completed.Count == 0) goto calculate_result;
+
+            foreach (var semester in required.SemesterRequirements)
+            {
+                foreach (var course in semester.MandatoryCourses)
+                {
+                    if (completed.Remove(course.CourseCode))
+                    {
+                        requirementsMet++;
+                        if (completed.Count == 0) goto calculate_result;
+                    }
+                }
+                foreach (var course in semester.TechnicalElectiveCourses)
+                {
+                    if (completed.Remove(course.CourseCode))
+                    {
+                        requirementsMet++;
+                        if (completed.Count == 0) goto calculate_result;
+                        break;
+                    }
+                }
+                foreach (var course in semester.GeneralElectiveCourses)
+                {
+                    if (completed.Remove(course.CourseCode))
+                    {
+                        requirementsMet++;
+                        if (completed.Count == 0) goto calculate_result;
+                        break;
+                    }
+                }
+            }
+
+            calculate_result:
+
+            int currentSemester = 0, programCourseCount = 0;
+            foreach (var semester in required.SemesterRequirements)
+            {
+                currentSemester++;
+                programCourseCount += semester.MandatoryCourses.Count;
+                if (semester.TechnicalElectiveCourses.Count > 0) programCourseCount++;
+                if (semester.GeneralElectiveCourses.Count > 0) programCourseCount++;
+                if (requirementsMet < programCourseCount)
+                {
+                    break;
+                }
+            }
+
+            return currentSemester;
+        }
     }
 
 

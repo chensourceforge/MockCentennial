@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockCentennial.Models;
 using MockCentennial.Models.TranscriptModel;
 
-namespace Issue1Tests
+namespace UnitTests
 {
     [TestClass]
     public class CreateStudentTests
