@@ -326,5 +326,27 @@ namespace MockCentennial.Controllers
             }
         }
 
+        public ViewResult CancelRegistration()
+        {
+            // use in development only
+            List<TermOption> model = dao.GetAllTermOptions();
+            return View(model);
+        }
+
+        [HttpPost]
+        public string CancelRegistration(int TermId)
+        {
+            Student student = (Student)Session["student"];
+            int studentId = student.StudentId;
+            if (dao.CancelRegistration(studentId, TermId))
+            {
+                return "Registration was cancelled successfully.";
+            }
+            else
+            {
+                return "An error occurred while cancelling registration.";
+            }
+        }
+
     }
 }

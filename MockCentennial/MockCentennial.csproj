@@ -305,6 +305,7 @@
     <Content Include="Views\Registration\FeeAccountSummary.cshtml" />
     <Content Include="Views\Student\StudentRecord.cshtml" />
     <Content Include="Views\Student\AcademicTranscript.cshtml" />
+    <Content Include="Views\Registration\CancelRegistration.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

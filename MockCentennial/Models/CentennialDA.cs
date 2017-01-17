@@ -1040,7 +1040,11 @@ namespace MockCentennial.Models
             }
 
             // modify invoice in memory
-            Invoice invoice = JsonConvert.DeserializeObject<Invoice>((string)cmd.Parameters["@Invoice"].Value);
+            Invoice invoice = null;
+            object invoiceCol = cmd.Parameters["@Invoice"].Value;
+            if (!(invoiceCol is DBNull)) invoice = JsonConvert.DeserializeObject<Invoice>((string)invoiceCol);
+            if (invoice == null) invoice = NewInvoice();
+
             string courseCode = (string)cmd.Parameters["@CourseCode"].Value;
             AddCourseToInvoice(ref invoice, courseCode, courseCredits);
 
@@ -3856,6 +3860,33 @@ namespace MockCentennial.Models
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Cancels student registration by deleting all enrollments in the specified term,
+        /// updating student transcript, and invoice, to reflect those changes, and
+        /// setting DateRegistrationCancelled to today for the registration record
+        /// </summary>
+        /// <param name="StudentId"></param>
+        /// <param name="TermId"></param>
+        /// <returns></returns>
+        public bool CancelRegistration(int StudentId, int TermId)
+        {
+            int? registrationId;
+            string sql = "select RegistrationId from InvoiceInfo where StudentId=@StudentId and TermId=@TermId";
+            using(SqlConnection conn=new SqlConnection(CONNECTION_STR))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.Add("@StudentId", SqlDbType.Int).Value = StudentId;
+                cmd.Parameters.Add("@TermId", SqlDbType.Int).Value = TermId;
+                conn.Open();
+                registrationId = (int?)cmd.ExecuteScalar();
+                if (registrationId == null)
+                {
+                    return false;
+                }
+            }
+            return CancelRegistration(StudentId, TermId, registrationId.Value);
         }
 
         /// <summary>

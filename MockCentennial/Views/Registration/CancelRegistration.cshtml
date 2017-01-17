@@ -1,0 +1,13 @@
+﻿@model IEnumerable<MockCentennial.Models.TermOption>
+
+@{
+    ViewBag.Title = "Cancel Registration";
+}
+
+@using (Html.BeginForm("CancelRegistration", "Registration", FormMethod.Post))
+{
+    <div>
+        I want to cancel registration for term @Html.DropDownList("TermId", new SelectList(Model, "TermId", "TermName"))
+    </div>
+    <div><button type="submit">Cancel Registration</button></div>
+}

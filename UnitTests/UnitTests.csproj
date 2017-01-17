@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Issue1Tests.cs" />
     <Compile Include="Issue4Tests.cs" />
+    <Compile Include="Issue5Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
