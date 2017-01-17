@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MockCentennial.Models
 {
@@ -13,5 +14,13 @@ namespace MockCentennial.Models
         public double registrationFee { get; set; }
         public List<InvoiceCourse> tuition { get; set; }
         public double total { get; set; }
+    }
+
+    public class InvoiceInfo
+    {
+        public int RegistrationId { get; set; }
+        public DateTime? DatePaymentMade { get; set; }
+        public DateTime? DateRefundIssued { get; set; }
+        public Invoice Invoice { get; set; }
     }
 }

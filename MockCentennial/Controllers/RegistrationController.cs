@@ -306,7 +306,24 @@ namespace MockCentennial.Controllers
             Student student = (Student)Session["student"];
             int studentId = student.StudentId;
             int termId = dao.GetCurrentTermOption().TermId;
-            return View(dao.GetInvoice(studentId, termId));
+            return View(dao.GetInvoiceInfo(studentId, termId));
+        }
+
+        [HttpPost]
+        public string MakePayment(int registrationId, double amount)
+        {
+            Student student = (Student)Session["student"];
+            int studentId = student.StudentId;
+            if (dao.ReceivePayment(studentId, registrationId, amount))
+            {
+                student = dao.FindStudentById(studentId);
+                Session["student"] = student;
+                return "Thank you for your payment.";
+            }
+            else
+            {
+                return "A problem occurred while processing payment.";
+            }
         }
 
     }

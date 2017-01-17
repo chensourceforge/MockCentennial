@@ -1042,8 +1042,7 @@ namespace MockCentennial.Models
             // modify invoice in memory
             Invoice invoice = JsonConvert.DeserializeObject<Invoice>((string)cmd.Parameters["@Invoice"].Value);
             string courseCode = (string)cmd.Parameters["@CourseCode"].Value;
-            invoice.tuition.Add(NewInvoiceCourse(courseCode, courseCredits));
-            UpdateInvoiceTotal(ref invoice);
+            AddCourseToInvoice(ref invoice, courseCode, courseCredits);
 
             int registrationId = (int)cmd.Parameters["@RegistrationId"].Value;
             
@@ -2688,8 +2687,7 @@ namespace MockCentennial.Models
                         {
                             cmd.Parameters["@CourseId"].Value = courseId;
                             string courseCode = (string) cmd.ExecuteScalar();
-                            int index = invoice.tuition.FindIndex(c => c.courseCode.Equals(courseCode));
-                            invoice.tuition.RemoveAt(index);
+                            RemoveCourseFromInvoice(ref invoice, courseCode);
                         }
                         foreach (int courseId in coursesToAdd)
                         {
@@ -2700,11 +2698,10 @@ namespace MockCentennial.Models
                                 {
                                     string courseCode = reader.GetString(0);
                                     double courseCredits = Convert.ToDouble(reader.GetDecimal(1));
-                                    invoice.tuition.Add(NewInvoiceCourse(courseCode, courseCredits));
+                                    AddCourseToInvoice(ref invoice, courseCode, courseCredits);
                                 }
                             }
                         }
-                        UpdateInvoiceTotal(ref invoice);
                         cmd.CommandText = "update registration set invoice=@Invoice where registrationid=@RegistrationId";
                         cmd.Parameters.Add("@RegistrationId", SqlDbType.Int).Value = registrationId;
                         cmd.Parameters.Add("@Invoice", SqlDbType.NVarChar).Value = JsonConvert.SerializeObject(invoice);
@@ -2733,9 +2730,22 @@ namespace MockCentennial.Models
                 invoice.total += c.fee;
             }
         }
-        private InvoiceCourse NewInvoiceCourse(string courseCode, double courseCredits)
+        
+        /// <summary>
+        /// In memory modification to add a course to invoice
+        /// </summary>
+        /// <param name="invoice"></param>
+        /// <param name="courseCode"></param>
+        /// <param name="courseCredits"></param>
+        private void AddCourseToInvoice(ref Invoice invoice, string courseCode, double courseCredits)
         {
-            return new InvoiceCourse {courseCode = courseCode, fee = courseCredits*200};
+            InvoiceCourse invoiceCourse = new InvoiceCourse
+            {
+                courseCode = courseCode,
+                fee = courseCredits*200
+            };
+            invoice.tuition.Add(invoiceCourse);
+            UpdateInvoiceTotal(ref invoice);
         }
         private Invoice NewInvoice()
         {
@@ -2748,6 +2758,9 @@ namespace MockCentennial.Models
             };
             return invoice;
         }
+
+        
+
         private HashSet<string> GetAllCompletedCoursesForTimetableBuilder(Transcript transcript, string currentTerm)
         {
             HashSet<string> completedCourses = new HashSet<string>();
@@ -3332,10 +3345,8 @@ namespace MockCentennial.Models
                         foreach (var ic in existingCourseEnrollments)
                         {
                             string courseCode = ic.subject + ic.course;
-                            int index = oldInvoice.tuition.FindIndex(c => c.courseCode.Equals(courseCode));
-                            oldInvoice.tuition.RemoveAt(index);
+                            RemoveCourseFromInvoice(ref oldInvoice, courseCode);
                         }
-                        UpdateInvoiceTotal(ref oldInvoice);
                     }
 
                     // call stored procedure to update changes
@@ -3847,9 +3858,15 @@ namespace MockCentennial.Models
             return false;
         }
 
-        public Invoice GetInvoice(int StudentId,int TermId)
+        /// <summary>
+        /// Gets invoice info for the specified student id and term id
+        /// </summary>
+        /// <param name="StudentId"></param>
+        /// <param name="TermId"></param>
+        /// <returns></returns>
+        public InvoiceInfo GetInvoiceInfo(int StudentId,int TermId)
         {
-            string sql = "select invoice from invoiceinfo where studentid=@StudentId and termid=@TermId";
+            string sql = "select Invoice,DatePaymentMade,DateRefundIssued,RegistrationId from invoiceinfo where studentid=@StudentId and termid=@TermId";
             using (SqlConnection conn = new SqlConnection(CONNECTION_STR))
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
@@ -3860,14 +3877,26 @@ namespace MockCentennial.Models
                 {
                     if (reader.Read())
                     {
+                        InvoiceInfo invoiceInfo = new InvoiceInfo
+                        {
+                            RegistrationId = (int)reader["RegistrationId"],
+                            Invoice = null,
+                            DatePaymentMade = null,
+                            DateRefundIssued = null
+                        };
                         if (!reader.IsDBNull(0))
                         {
-                            Invoice invoice = JsonConvert.DeserializeObject<Invoice>(reader.GetString(0));
-                            if (invoice != null)
-                            {
-                                return invoice;
-                            }
+                            invoiceInfo.Invoice = JsonConvert.DeserializeObject<Invoice>(reader.GetString(0));
                         }
+                        if (!reader.IsDBNull(1))
+                        {
+                            invoiceInfo.DatePaymentMade = (DateTime)reader["DatePaymentMade"];
+                        }
+                        if (!reader.IsDBNull(2))
+                        {
+                            invoiceInfo.DateRefundIssued = (DateTime)reader["DateRefundIssued"];
+                        }
+                        return invoiceInfo;
                     }
                 }
             }
@@ -4040,6 +4069,54 @@ namespace MockCentennial.Models
 
             return currentSemester;
         }
+
+        /// <summary>
+        /// Placeholder logic for when a payment is received. DatePaymentMade and StudentHasHolds columns are updated.
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <param name="registrationId"></param>
+        /// <param name="amount"></param>
+        /// <returns>true, if updates were made; otherwise, false</returns>
+        public bool ReceivePayment(int studentId, int registrationId, double amount)
+        {
+            if (amount == 0.0)
+            {
+                return false;
+            }
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STR))
+            {
+                try
+                {
+                    conn.Open();
+                    using (SqlTransaction transaction = conn.BeginTransaction())
+                    using (SqlCommand cmd = new SqlCommand(null, conn, transaction))
+                    {
+                        cmd.CommandText = "update Registration set DatePaymentMade=GETDATE() where RegistrationId=@RegistrationId";
+                        cmd.Parameters.Add("@RegistrationId", SqlDbType.Int).Value = registrationId;
+                        if (cmd.ExecuteNonQuery() != 1)
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+                        cmd.CommandText = "update Student set StudentHasHolds=0 where StudentId=@StudentId";
+                        cmd.Parameters.Add("@StudentId", SqlDbType.Int).Value = studentId;
+                        if (cmd.ExecuteNonQuery() != 1)
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+                        transaction.Commit();
+                        return true;
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception);
+                }
+            }
+            return false;
+        }
+
     }
 
 
