@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockCentennial", "MockCentennial\MockCentennial.csproj", "{62E6374C-5A41-41A7-B4BC-46BC010C6196}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{000F8159-2BEF-4E56-ADB0-DF61500DCF98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetabling", "Timetabling\Timetabling.csproj", "{5C3A2ED9-E4C3-430A-8FFA-0FDAFD957146}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{000F8159-2BEF-4E56-ADB0-DF61500DCF98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{000F8159-2BEF-4E56-ADB0-DF61500DCF98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{000F8159-2BEF-4E56-ADB0-DF61500DCF98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C3A2ED9-E4C3-430A-8FFA-0FDAFD957146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C3A2ED9-E4C3-430A-8FFA-0FDAFD957146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C3A2ED9-E4C3-430A-8FFA-0FDAFD957146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C3A2ED9-E4C3-430A-8FFA-0FDAFD957146}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
