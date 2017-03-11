@@ -254,7 +254,7 @@ namespace Timetabling
     //    public List<int> CourseIds { get; set; }
     //}
 
-    class Timetabling
+    public class Timetabling
     {
         public bool IsSameCurriculum(Curriculum c1, Curriculum c2)
         {
@@ -603,7 +603,7 @@ namespace Timetabling
         private Lookup<int, int> courseIdIndexes;
         //private List<Package> packages;
         //private int curriculumCount, courseCount, roomCount, instructorCount, timeCount;
-
+        
         public void PopulateSchedule()
         {
             times = GetTimes();
@@ -1260,6 +1260,30 @@ namespace Timetabling
             }
             Console.WriteLine(str);
         }
+        public List<Event> ExportEventList()
+        {
+            return events;
+        }
+        public List<Time> ExportTimeList()
+        {
+            return times;
+        }
+        public List<Room> ExportRoomList()
+        {
+            return rooms;
+        }
+        public List<Course> ExportCourseList()
+        {
+            return courses;
+        }
+        public List<Instructor> ExportInstructorList()
+        {
+            return instructors;
+        }
+        public List<Student> ExportStudentList()
+        {
+            return students;
+        }
     }
 
     class Program
@@ -1268,7 +1292,7 @@ namespace Timetabling
         {
             Timetabling scheduler=new Timetabling();
             scheduler.PopulateSchedule();
-            //scheduler.DisplaySchedule();
+            scheduler.DisplaySchedule();
             scheduler.DisplayPackages(300);
         }
     }
