@@ -102,7 +102,7 @@ namespace Timetabler
                 string txt = $"course {course.CourseId} - {course.ClassType}\n{evt.Students} students";
                 int roomIndex = evt.Room + 1;
                 int startTime = evt.StartTime + 1;
-                int endTime = startTime + evt.TimeUnits + 1;
+                int endTime = startTime + evt.TimeUnits;
                 for (int timeIndex = startTime; timeIndex < endTime; timeIndex++)
                 {
                     AddTextToGrid(txt, tableRoomTime, timeIndex, roomIndex);
@@ -142,7 +142,7 @@ namespace Timetabler
                 string txt = $"course {course.CourseId} - {course.ClassType}\n{evt.Students} students";
                 int instructorIndex = evt.Instructor + 1;
                 int startTime = evt.StartTime + 1;
-                int endTime = startTime + evt.TimeUnits + 1;
+                int endTime = startTime + evt.TimeUnits;
                 for (int timeIndex = startTime; timeIndex < endTime; timeIndex++)
                 {
                     AddTextToGrid(txt, tableInstructorTime, timeIndex, instructorIndex);
@@ -211,8 +211,6 @@ namespace Timetabler
                 Instructor instructor = instructors[evt.Instructor];
                 Room room = rooms[evt.Room];
                 string txt = $"course {course.CourseId} {course.ClassType} - room {room.RoomId} - inst {instructor.InstructorId}\n";
-
-                
                 int startTime = evt.StartTime % (rows-1);
                 int endTime = startTime + evt.TimeUnits;
                 int dayIndex = times[evt.StartTime].Day - 1;

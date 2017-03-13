@@ -73,13 +73,10 @@ namespace Timetabling
     //    Required, OptionalGroup1, OptionalGroup2, NotRequired
     //}
 
-    public class CourseChoice : IEquatable<CourseChoice>
+    public class CourseChoice : IEquatable<CourseChoice>, IComparable<CourseChoice>
     {
         public int SelectHowMany { get; set; }
         public Dictionary<int, double> SelectFrom { get; set; }
-        //public int CourseId { get; set; }
-        //public CourseCategory Category { get; set; }
-        //public double Likelihood { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -107,6 +104,46 @@ namespace Timetabling
             }
             return true;
         }
+
+        public int CompareTo(CourseChoice other)
+        {
+            if (other == null) return -1;
+            if (this == other) return 0;
+            if (this.SelectHowMany == 0)
+            {
+                if (other.SelectHowMany == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                if (other.SelectHowMany == 0)
+                {
+                    return -1;
+                }
+                else
+                {
+                    double thisTotal = this.SelectFrom.Count;
+                    double otherTotal = other.SelectFrom.Count;
+                    double thisRank = thisTotal/this.SelectHowMany;
+                    double otherRank = otherTotal/other.SelectHowMany;
+                    if (thisRank < otherRank) return -1;
+                    if (otherRank < thisRank) return 1;
+                    return 0;
+                }
+            }
+        }
+    }
+
+    public class PriorityGroup
+    {
+        public double PercentToConsider { get; set; }
+        public int NumberOfAttempts { get; set; }
     }
     public class Curriculum
     {
@@ -115,7 +152,7 @@ namespace Timetabling
         //public Dictionary<int, CourseCategory> CourseRequirements { get; set; }
         public List<CourseChoice> CourseRequirements { get; set; }
         public List<Package> Packages { get; set; }
-        public byte Priority { get; set; }
+        public int Priority { get; set; }
     }
     public class Student
     {
@@ -247,15 +284,11 @@ namespace Timetabling
         }
     }
 
-    //public class CourseGrouping
-    //{
-    //    public int Students { get; set; }
-    //    public Curriculum Curriculum { get; set; }
-    //    public List<int> CourseIds { get; set; }
-    //}
 
     public class Timetabling
     {
+        private Random rng = new Random(1);
+
         public bool IsSameCurriculum(Curriculum c1, Curriculum c2)
         {
             // TODO
@@ -277,13 +310,13 @@ namespace Timetabling
         //    Dictionary<int, CourseCategory> requiredCourses = new Dictionary<int, CourseCategory>();
         //    return requiredCourses;
         //}
-
-        public List<Student> GetStudents()
+        
+        public List<Student> GetStudents(List<PriorityGroup> pg)
         {
             // TODO
             List<Student> students = new List<Student>();
             int[] numStudents = {134, 141, 166, 109};
-            byte[] priorities = {0, 0, 1, 2};
+            int[] priorities = {0, 0, 1, 2};
             List<int>[] courseLists =
             {
                 new List<int>() {1, 2, 3, 4, 5},
@@ -295,7 +328,7 @@ namespace Timetabling
             for (int i = 0; i < 4; i++)
             {
                 int nStudents = numStudents[i];
-                byte priority = priorities[i];
+                int priority = priorities[i];
                 List<int> courseIds = courseLists[i];
                 for (int j = 0; j < nStudents; j++, studentId++)
                 {
@@ -305,7 +338,7 @@ namespace Timetabling
                         SelectHowMany = courseIds.Count,
                         SelectFrom = courseIds.ToDictionary(c => c, c => 1.0)
                     });
-
+                    courseList.Sort();
                     Curriculum curriculum = new Curriculum { CourseRequirements = courseList, Priority = priority };
                     students.Add(new Student { StudentId = studentId, Curriculum = curriculum });
                 }
@@ -315,8 +348,9 @@ namespace Timetabling
 
         public List<Curriculum> GetCurricula(List<Student> students)
         {
+            IOrderedEnumerable<Student> orderedStudentList = students.OrderBy(s => s.Curriculum.Priority);
             List<Curriculum> curricula = new List<Curriculum>();
-            foreach (Student student in students)
+            foreach (Student student in orderedStudentList)
             {
                 //Dictionary<int, CourseCategory> requiredCourses = GetRequiredCoursesByStudent(student.StudentId);
                 Curriculum curriculum = curricula.Find(c => IsSameCurriculum(c, student.Curriculum));
@@ -590,6 +624,17 @@ namespace Timetabling
             return matrix;
         }
 
+        public List<PriorityGroup> GetPriorities()
+        {
+            // TODO
+            List<PriorityGroup> priorities = new List<PriorityGroup>();
+            priorities.Add(new PriorityGroup { PercentToConsider = 0.80, NumberOfAttempts = 4 });
+            priorities.Add(new PriorityGroup { PercentToConsider = 0.70, NumberOfAttempts = 3 });
+            priorities.Add(new PriorityGroup { PercentToConsider = 0.60, NumberOfAttempts = 2 });
+            priorities.Add(new PriorityGroup { PercentToConsider = 0.51, NumberOfAttempts = 1 });
+            return priorities;
+        }
+
         private byte[,] /*mCurriculumCourse,*/ mRoomCourse, mInstructorCourse;
         private Event[,] mRoomTime, mInstructorTime;
         //private int[] aPackageTime;
@@ -606,9 +651,10 @@ namespace Timetabling
         
         public void PopulateSchedule()
         {
+            List<PriorityGroup> priorities = GetPriorities();
             times = GetTimes();
             rooms = GetRooms();
-            students = GetStudents();
+            students = GetStudents(priorities);
             curricula = GetCurricula(students);
             courses = GetCourses(curricula, rooms);
             instructors = GetInstructors(courses);
@@ -632,120 +678,162 @@ namespace Timetabling
             // course id -> course indexes
             courseIdIndexes = (Lookup<int, int>) courses.ToLookup(c => c.CourseId, c => courses.IndexOf(c));
 
-            for (int curriculumIndex = 0; curriculumIndex < curriculumCount; curriculumIndex++)
+            int iterationsWhenStuck = 10;
+            int previousTotal = 0;
+            while(iterationsWhenStuck > 0)
             {
-                Curriculum curriculum = curricula[curriculumIndex];
-                List<int> courseIndexes = GetCoursesInPackage(curriculum);
-
-                //List<int> required = new List<int>(), optional1 = new List<int>(), optional2 = new List<int>();
-                //for (int courseIndex = 0; courseIndex < courseCount; courseIndex++)
-                //{
-                    //byte category = mCurriculumCourse[courseIndex, curriculumIndex];
-                    //switch (category)
-                    //{
-                    //    case Required:
-                    //        required.Add(courseIndex);
-                    //        break;
-                    //    case Optional1:
-                    //        optional1.Add(courseIndex);
-                    //        break;
-                    //    case Optional2:
-                    //        optional2.Add(courseIndex);
-                    //        break;
-                    //}
-                //}
-                bool canCreatePackage = true;
-                while (canCreatePackage && curriculum.Students > 0)
+                int totalStudentsRemaining = 0;
+                for (int curriculumIndex = 0; curriculumIndex < curriculumCount; curriculumIndex++)
                 {
-                    Array.Clear(aPackageTime, 0, aPackageTime.Length);
-                    //Package package = new Package {Events = new List<Event>(),Students = 0};
+                    Curriculum curriculum = curricula[curriculumIndex];
+                    PriorityGroup priorityGroup = priorities[curriculum.Priority];
+                    int nStudentsConsider = (int) Math.Round(priorityGroup.PercentToConsider*curriculum.Students);
+                    int nAttempts = priorityGroup.NumberOfAttempts;
 
-                    List<Event> existingEvents;
-                    List<int> coursesWithoutExistingEvent;
-                    bool allowConflicts = false;
-                    GetExistingEvents(courseIndexes, out existingEvents, out coursesWithoutExistingEvent, allowConflicts);
-
-                    int studentsAffected = curriculum.Students;
-
-                    foreach (var existingEvent in existingEvents)
+                    while (nStudentsConsider > 0 && nAttempts > 0)
                     {
-                        studentsAffected = AddEventToPackage(studentsAffected, existingEvent, aPackageTime, true);
-                    }
+                        Array.Clear(aPackageTime, 0, aPackageTime.Length);
+                        List<int> courseIndexes = GetCoursesInPackage(curriculum);
+                        List<Event> existingEvents;
+                        List<int> coursesWithoutExistingEvent;
+                        bool allowConflicts = false;
+                        GetExistingEvents(courseIndexes, out existingEvents, out coursesWithoutExistingEvent,
+                            allowConflicts);
 
-                    List<Event> newEvents = new List<Event>();
-                    bool topTierOnly = true;
-                    foreach (int courseIndex in coursesWithoutExistingEvent)
-                    {
-                        Event newEvent = CreateEvent(courseIndex, aPackageTime, topTierOnly, allowConflicts);
-                        if (newEvent == null)
+                        //int studentsAffected = curriculum.Students;
+                        int studentsAffected = 1;
+
+                        foreach (var existingEvent in existingEvents)
                         {
-                            canCreatePackage = false;
-                            break;
+                            studentsAffected = AddEventToPackage(studentsAffected, existingEvent, aPackageTime, true);
                         }
-                        studentsAffected = AddEventToPackage(studentsAffected, newEvent, aPackageTime, false);
-                        newEvents.Add(newEvent);
-                    }
 
-                    if (canCreatePackage)
-                    {
-                        Package package = null;
-                        if (newEvents.Count == 0)
+                        List<Event> newEvents = new List<Event>();
+                        bool canCreatePackage = true;
+                        bool topTierOnly = true;
+                        foreach (int courseIndex in coursesWithoutExistingEvent)
                         {
-                            // only existing
-                            foreach (var p in curriculum.Packages)
+                            Event newEvent = CreateEvent(courseIndex, aPackageTime, topTierOnly, allowConflicts);
+                            if (newEvent == null)
                             {
-                                List<Event> inPackage = p.Events;
-                                bool diff = existingEvents.Any(e => !inPackage.Contains(e)) || inPackage.Any(e => !existingEvents.Contains(e));
-                                if (!diff)
+                                canCreatePackage = false;
+                                nAttempts--;
+                                break;
+                            }
+                            studentsAffected = AddEventToPackage(studentsAffected, newEvent, aPackageTime, false);
+                            newEvents.Add(newEvent);
+                        }
+
+                        if (canCreatePackage)
+                        {
+                            Package package = null;
+                            if (newEvents.Count == 0)
+                            {
+                                // only existing
+                                foreach (var p in curriculum.Packages)
                                 {
-                                    package = p;
-                                    foreach (var e in package.Events)
+                                    List<Event> inPackage = p.Events;
+                                    bool diff = existingEvents.Any(e => !inPackage.Contains(e)) ||
+                                                inPackage.Any(e => !existingEvents.Contains(e));
+                                    if (!diff)
                                     {
-                                        e.Students += studentsAffected;
+                                        package = p;
+                                        foreach (var e in package.Events)
+                                        {
+                                            e.Students += studentsAffected;
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
-                        }
 
-                        if (package == null)
-                        {
-                            package = new Package { Events = new List<Event>(), Students = 0 };
-                            package.Events.AddRange(existingEvents);
-                            package.Events.AddRange(newEvents);
-                            curriculum.Packages.Add(package);
-                            newEvents.ForEach(e => events.Add(e));
-                            foreach (var e in package.Events)
+                            if (package == null)
                             {
-                                e.Students += studentsAffected;
-                                e.Packages += 1;
+                                package = new Package {Events = new List<Event>(), Students = 0};
+                                package.Events.AddRange(existingEvents);
+                                package.Events.AddRange(newEvents);
+                                curriculum.Packages.Add(package);
+                                newEvents.ForEach(e => events.Add(e));
+                                foreach (var e in package.Events)
+                                {
+                                    e.Students += studentsAffected;
+                                    e.Packages += 1;
+                                }
                             }
+
+                            package.Students += studentsAffected;
+                            curriculum.Students -= studentsAffected;
+                            nStudentsConsider -= studentsAffected;
+                        }
+                        else
+                        {
+                            ClearEventsFromPackage(newEvents);
                         }
 
-                        package.Students += studentsAffected;
-                        curriculum.Students -= studentsAffected;
-                    }
-                    else
-                    {
-                        ClearEventsFromPackage(newEvents);
                     }
 
+                    totalStudentsRemaining += curriculum.Students;
                 }
+
+                if (totalStudentsRemaining == 0) break;
+                if (totalStudentsRemaining == previousTotal)
+                {
+                    iterationsWhenStuck--;
+                }
+                previousTotal = totalStudentsRemaining;
             }
 
         }
 
         public List<int> GetCoursesInPackage(Curriculum curriculum)
         {
-            // TODO
-            List<int> courseIndexes = new List<int>();
+            HashSet<int> courseIdsSelected = new HashSet<int>();
             foreach (var choiceGroup in curriculum.CourseRequirements)
             {
-                foreach (var choiceProbability in choiceGroup.SelectFrom)
+                Dictionary<int, double> possibleCourses = choiceGroup.SelectFrom;
+                int[] courseIdsToSelect = possibleCourses.Keys.Except(courseIdsSelected).ToArray();
+                int numberToSelect = choiceGroup.SelectHowMany;
+                int totalToSelectFrom = courseIdsToSelect.Length;
+                if (numberToSelect < totalToSelectFrom)
                 {
-                    int courseId = choiceProbability.Key;
-                    courseIndexes.AddRange(courseIdIndexes[courseId]);
+                    // play wheel of fortune
+                    double[] bounds = new double[totalToSelectFrom];
+                    while (numberToSelect > 0)
+                    {
+                        double upperBound = 0;
+                        for (int i = 0; i < totalToSelectFrom; i++)
+                        {
+                            int courseId = courseIdsToSelect[i];
+                            if (courseId != -1)
+                            {
+                                upperBound += possibleCourses[courseId];
+                                bounds[i] = upperBound;
+                            }
+                        }
+                        
+                        double landing = rng.NextDouble() * upperBound;
+                        int chosen = 0;
+                        while (bounds[chosen] <= landing) chosen++;
+
+                        courseIdsSelected.Add(courseIdsToSelect[chosen]);
+                        courseIdsToSelect[chosen] = -1;
+                        bounds[chosen] = -1;
+                        numberToSelect--;
+                    }
                 }
+                else
+                {
+                    foreach (int courseId in courseIdsToSelect)
+                    {
+                        courseIdsSelected.Add(courseId);
+                    }
+                }
+            }
+
+            List<int> courseIndexes = new List<int>();
+            foreach (int courseId in courseIdsSelected)
+            {
+                courseIndexes.AddRange(courseIdIndexes[courseId]);
             }
             return courseIndexes;
         }
@@ -881,7 +969,7 @@ namespace Timetabling
                 existingEvents.Remove(_event);
                 eventTimes.Remove(_event);
                 conflictsInEvent.Remove(_event);
-                foreach (var e in conflictsInEvent.Keys)
+                foreach (var e in conflictsInEvent.Keys.ToArray())
                 {
                     conflictsInEvent[e] = 0;
                 }
@@ -1290,7 +1378,7 @@ namespace Timetabling
     {
         static void Main(string[] args)
         {
-            Timetabling scheduler=new Timetabling();
+            Timetabling scheduler = new Timetabling();
             scheduler.PopulateSchedule();
             scheduler.DisplaySchedule();
             scheduler.DisplayPackages(300);
