@@ -33,6 +33,10 @@ namespace MockCentennial.Controllers
                         Session["student"] = student;
                     }
                 }
+                else if (UserNum.Equals("000000001"))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
                 else
                 {
                     // is staff

@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    @Scripts.Render("~/bundles/jquery")
+
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/Content/adminTemplate.css")">
+    @RenderSection("Styles", false)
+
+</head>
+<body>
+    <div class="navSideBar">
+        <div><a href="/Account/Logout">Logout</a></div>
+        <div>
+            @using (Html.BeginForm("GenerateTimetable", "Admin", FormMethod.Get))
+            {
+                <button type="submit">Generate Timetable</button>
+            }
+        </div>
+    </div>
+
+    <div class="mainBody">
+        @RenderBody()
+    </div>
+</body>
+</html>

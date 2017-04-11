@@ -1,0 +1,31 @@
+﻿.navSideBar {
+    position: absolute;
+    width: 300px;
+    height: 800px;
+    left: 0px;
+    top: 0px;
+    background: lightgray;
+}
+
+.mainBody {
+    position: absolute;
+    left: 300px;
+    top: 0px;
+    padding: 10px 0px 0px 10px;
+}
+
+.navSideBar div {
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+.navSideBar button {
+    padding: 10px 10px 10px 10px;
+}
+
+.greenBackground {
+    background: lightgreen;
+}
+.redBackground {
+    background: lightpink;
+}
